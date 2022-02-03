@@ -8,11 +8,11 @@ A. Semantic similairity
 7.  use Beam robot to present the interaction
 
 
-B.  Detection and interaction with person
-8. Recognize face from camera
-9. associate recognized face with photos that were provided
-10. associate face with other features (name, sex, hobbies)
-11. simple spoken language interaction
+8. Detection and interaction with person
+9. Recognize face from camera
+10. associate recognized face with photos that were provided
+11. associate face with other features (name, sex, hobbies)
+12. simple spoken language interaction
 
 C.  Scenario final:
 Two people come up
