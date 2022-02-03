@@ -9,10 +9,10 @@ A. Semantic similairity
 
 
 B.  Detection and interaction with person
-REcognize face from camera
-associate recognized face with photos that were provided
-associate face with other features (name, sex, hobbies)
-simple spoken language interaction
+a. REcognize face from camera
+b. associate recognized face with photos that were provided
+C. associate face with other features (name, sex, hobbies)
+d. simple spoken language interaction
 
 Scenario final:
 Two people come up
