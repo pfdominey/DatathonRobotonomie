@@ -7,6 +7,7 @@ A. Semantic similairity
 6.  use french language
 7.  use Beam robot to present the interaction
 
+Detection and interaction with person
 
 8. Detection and interaction with person
 9. Recognize face from camera
