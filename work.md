@@ -18,3 +18,5 @@ Scenario final:
 Two people come up
 system recognizes them
 then it finds in its database, two photos and stories that are similar from these people
+
+Based on "semantic profile" the robot can propose/orient towards new activities
