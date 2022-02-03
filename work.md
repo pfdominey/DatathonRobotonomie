@@ -20,6 +20,8 @@ Two people come up
 system recognizes them
 then it finds in its database, two photos and stories that are similar from these people
 
+Version simple:  recognize one person, and tell a story using his pictures
+
 Based on "semantic profile" the robot can propose/orient towards new activities
 
 
