@@ -9,14 +9,16 @@ A. Semantic similairity
 
 
 B.  Detection and interaction with person
-a. REcognize face from camera
-b. associate recognized face with photos that were provided
-C. associate face with other features (name, sex, hobbies)
-d. simple spoken language interaction
+8. Recognize face from camera
+9. associate recognized face with photos that were provided
+10. associate face with other features (name, sex, hobbies)
+11.  simple spoken language interaction
 
-Scenario final:
+C.  Scenario final:
 Two people come up
 system recognizes them
 then it finds in its database, two photos and stories that are similar from these people
 
 Based on "semantic profile" the robot can propose/orient towards new activities
+
+
