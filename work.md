@@ -12,7 +12,7 @@ B.  Detection and interaction with person
 8. Recognize face from camera
 9. associate recognized face with photos that were provided
 10. associate face with other features (name, sex, hobbies)
-11.  simple spoken language interaction
+11. simple spoken language interaction
 
 C.  Scenario final:
 Two people come up
