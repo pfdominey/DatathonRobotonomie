@@ -24,4 +24,9 @@ Version simple:  recognize one person, and tell a story using his pictures
 
 Based on "semantic profile" the robot can propose/orient towards new activities
 
+Biblio:
+Perception des patients/soignants sur les robots
+Attents des patients/soignants
+
+Prepare le "pitch" pour le debut du datathon: macquette beam
 
