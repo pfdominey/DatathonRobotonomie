@@ -1,5 +1,10 @@
 # DatathonRobotonomie
-workspace for Datathon
+
+
+
+Some will work on the python, others on biblio, scenarios etc.
+
+Related to the python coding:
 
 the first goal is to run the semantic_similarity.ipynb jupyter notebook
 
