@@ -1,0 +1,685 @@
+TY  - JOUR
+TI  - The foundations of a policy for the use of social robots in care
+AU  - Sætra, Henrik Skaug
+T2  - Technology in Society
+AB  - Should we deploy social robots in care settings? This question, asked from a policy standpoint, requires that we understand the potential benefits and downsides of deploying social robots in care situations. Potential benefits could include increased efficiency, increased welfare, physiological and psychological benefits, and experienced satisfaction. There are, however, important objections to the use of social robots in care. These include the possibility that relations with robots can potentially displace human contact, that these relations could be harmful, that robot care is undignified and disrespectful, and that social robots are deceptive. I propose a framework for evaluating all these arguments in terms of three aspects of care: structure, process, and outcome. I then highlight the main ethical considerations that have to be made in order to untangle the web of pros and cons of social robots in care as these pros and cons are related the trade-offs regarding quantity and quality of care, process and outcome, and objective and subjective outcomes.
+DA  - 2020/11//
+PY  - 2020
+DO  - 10.1016/j.techsoc.2020.101383
+DP  - DOI.org (Crossref)
+VL  - 63
+SP  - 101383
+J2  - Technology in Society
+LA  - en
+SN  - 0160791X
+UR  - https://linkinghub.elsevier.com/retrieve/pii/S0160791X20303262
+Y2  - 2022/03/09/20:17:40
+L1  - files/9571/Sætra - 2020 - The foundations of a policy for the use of social .pdf
+ER  - 
+
+TY  - JOUR
+TI  - A review of recent research in social robotics
+AU  - Sheridan, Thomas B
+T2  - Current Opinion in Psychology
+DA  - 2020/12//
+PY  - 2020
+DO  - 10.1016/j.copsyc.2020.01.003
+DP  - DOI.org (Crossref)
+VL  - 36
+SP  - 7
+EP  - 12
+J2  - Current Opinion in Psychology
+LA  - en
+SN  - 2352250X
+UR  - https://linkinghub.elsevier.com/retrieve/pii/S2352250X2030004X
+Y2  - 2022/03/09/20:17:42
+L1  - files/9572/Sheridan - 2020 - A review of recent research in social robotics.pdf
+ER  - 
+
+TY  - CONF
+TI  - Acceptance and use of a social robot by elderly users in a domestic environment
+AU  - Klamer, Tineke
+AU  - Allouch, Somaya Ben
+T2  - 4th International ICST Conference on Pervasive Computing Technologies for Healthcare
+AB  - The study presented in this article aims to improve our understanding of how people use zoomorphic robots in a health related setting in their domestic environments in general and, in particular, whether people are able to build (long- term) relationships with these robots. The influences of social and hedonic factors were examined, in addition to the normally studied utilitarian factors of the Technology Acceptance Model (TAM). Three elderly participants interacted with the Nabaztag, a zoomorphic robot, for 10 days to improve their overall health condition. Hedonic factors were not found to be important for the acceptance of the Nabaztag. However, these factors seemed to be important for building a relationship with the Nabaztag. Social factors were found to be important for the acceptance of robots, but not for building a relationship with the Nabaztag. The results yielded some interesting findings that need more study: (1) the relationship between the place of the Nabaztag and acceptance and use, (2) the relationship between naming the Nabaztag and building a relationship with it and (3) the relationship between using verbal/non-verbal communication and building a relationship with it.
+C1  - Munchen, Germany
+C3  - Proceedings of the 4th International ICST Conference on Pervasive Computing Technologies for Healthcare
+DA  - 2010///
+PY  - 2010
+DO  - 10.4108/ICST.PERVASIVEHEALTH2010.8892
+DP  - DOI.org (Crossref)
+LA  - en
+PB  - IEEE
+SN  - 978-963-9799-89-9
+UR  - http://eudl.eu/doi/10.4108/ICST.PERVASIVEHEALTH2010.8892
+Y2  - 2022/03/09/20:17:45
+L1  - files/9573/Klamer et Allouch - 2010 - Acceptance and use of a social robot by elderly us.pdf
+ER  - 
+
+TY  - JOUR
+TI  - Assistive social robots in elderly care: a review
+AU  - Broekens, J.
+AU  - Heerink, M.
+AU  - Rosendal, H.
+T2  - Gerontechnology
+AB  - Context: Assistive social robots, a particular type of assistive robotics designed for social interaction with humans could play an important role with respect to health and psychological wellbeing of elderly.
+DA  - 2009/04/01/
+PY  - 2009
+DO  - 10.4017/gt.2009.08.02.002.00
+DP  - DOI.org (Crossref)
+VL  - 8
+IS  - 2
+SP  - 94
+EP  - 103
+LA  - en
+SN  - 1569-111X, 1569-1101
+ST  - Assistive social robots in elderly care
+UR  - http://gerontechnology.info/index.php/journal/article/view/1011
+Y2  - 2022/03/09/20:17:47
+L1  - files/9574/Broekens et al. - 2009 - Assistive social robots in elderly care a review.pdf
+ER  - 
+
+TY  - CHAP
+TI  - Development of Human-Centered Social Robot with Embedded Personality for Elderly Care
+AU  - Rodić, Aleksandar
+AU  - Vujović, Milica
+AU  - Stevanović, Ilija
+AU  - Jovanović, Miloš
+T2  - New Trends in Medical and Service Robots
+A2  - Wenger, Philippe
+A2  - Chevallereau, Christine
+A2  - Pisla, Doina
+A2  - Bleuler, Hannes
+A2  - Rodić, Aleksandar
+CY  - Cham
+DA  - 2016///
+PY  - 2016
+DP  - DOI.org (Crossref)
+VL  - 39
+SP  - 233
+EP  - 247
+LA  - en
+PB  - Springer International Publishing
+SN  - 978-3-319-30673-5 978-3-319-30674-2
+UR  - http://link.springer.com/10.1007/978-3-319-30674-2_18
+Y2  - 2022/03/09/20:57:54
+L1  - files/9579/Rodić et al. - 2016 - Development of Human-Centered Social Robot with Em.pdf
+ER  - 
+
+TY  - CHAP
+TI  - Robots as Social and Physical Assistants in Elderly Care
+AU  - Niemelä, Marketta
+AU  - Melkas, Helinä
+T2  - Human-Centered Digitalization and Services
+A2  - Toivonen, Marja
+A2  - Saari, Eveliina
+AB  - Care robots are robotic applications targeted for use in care and nursing environments, or to support independent living for the elderly and those with disabilities. Robots may provide relief to the challenge in many countries of tending to an increased elderly population’s needs for care services. This chapter provides an introductory review of care robots and discusses their acceptability within the field of elderly care. Our focus is on the end-users of robots, namely the elderly and care professionals, who are often neglected or misconceived within the field of technology development. We approach their perspective through three empirical studies: a citizen panel for older adults on their expectations and concerns for care robots, a case study of a social robot adopted within three elderly-care facilities, and a case study of a mobile telepresence robot piloted in two care facilities. In these studies, both elderly people and professionals showed positive perceptions towards care robots, at least from certain perspectives. They also presented requirements and framework conditions that should be taken into account when considering the use of robots in care. In particular, the study participants highlighted the priority of humans in care, although they accepted robots for carrying out secondary care tasks.
+CY  - Singapore
+DA  - 2019///
+PY  - 2019
+DP  - DOI.org (Crossref)
+VL  - 19
+SP  - 177
+EP  - 197
+LA  - en
+PB  - Springer Singapore
+SN  - 9789811377242 9789811377259
+UR  - http://link.springer.com/10.1007/978-981-13-7725-9_10
+Y2  - 2022/03/09/20:57:56
+L1  - files/9580/Niemelä et Melkas - 2019 - Robots as Social and Physical Assistants in Elderl.pdf
+ER  - 
+
+TY  - JOUR
+TI  - Social Robots in Therapy and Care
+AU  - Cifuentes, Carlos A.
+AU  - Pinto, Maria J.
+AU  - Céspedes, Nathalia
+AU  - Múnera, Marcela
+T2  - Current Robotics Reports
+AB  - Purpose of Review This work presents a comprehensive overview of social robots in therapy and the healthcare of children, adults, and elderly populations. According to recent evidence in this field, the primary outcomes and limitations are highlighted. This review points out the implications and requirements for the proper deployment of social robots in therapy and healthcare scenarios. Recent Findings Social robots are a current trend that is being studied in different healthcare services. Evidence highlights the potential and favorable results due to the support and assistance provided by social robots. However, some side effects and limitations are still under research.
+DA  - 2020/09//
+PY  - 2020
+DO  - 10.1007/s43154-020-00009-2
+DP  - DOI.org (Crossref)
+VL  - 1
+IS  - 3
+SP  - 59
+EP  - 74
+J2  - Curr Robot Rep
+LA  - en
+SN  - 2662-4087
+UR  - https://link.springer.com/10.1007/s43154-020-00009-2
+Y2  - 2022/03/09/20:57:58
+L1  - files/9581/Cifuentes et al. - 2020 - Social Robots in Therapy and Care.pdf
+ER  - 
+
+TY  - JOUR
+TI  - Social Robots for People with Aging and Dementia: A Systematic Review of Literature
+AU  - Góngora Alonso, Susel
+AU  - Hamrioui, Sofiane
+AU  - de la Torre Díez, Isabel
+AU  - Motta Cruz, Eduardo
+AU  - López-Coronado, Miguel
+AU  - Franco, Manuel
+T2  - Telemedicine and e-Health
+AB  - Background: Social robots are currently a form of assistive technology for the elderly, healthy, or with cognitive impairment, helping to maintain their independence and improve their well-being.
+Objective: The main aim of this article is to present a review of the existing research in the literature, referring to the use of social robots for people with dementia and/or aging.
+Methods: Academic databases that were used to perform the searches are IEEE Xplore, PubMed, Science Direct, and Google Scholar, taking into account as date of publication the last 10 years, from 2007 to the present. Several search criteria were established such as ‘‘robot’’ AND ‘‘dementia,’’ ‘‘robot’’ AND ‘‘cognitive impairment,’’ ‘‘robot’’ AND ‘‘social’’ AND ‘‘aging,’’ and so on., selecting the articles of greatest interest regarding the use of social robots in elderly people with or without dementia.
+Results: This search found a total of 96 articles on social robots in healthy people and with dementia, of which 38 have been identified as relevant work. Many of the articles show the acceptance of older people toward social robots.
+Conclusion: From the review of the research articles analyzed, it can be said that use of social robots in elderly people without cognitive impairment and with dementia, help in a positive way to work independently in basic activities and mobility, provide security, and reduce stress.
+DA  - 2019/07//
+PY  - 2019
+DO  - 10.1089/tmj.2018.0051
+DP  - DOI.org (Crossref)
+VL  - 25
+IS  - 7
+SP  - 533
+EP  - 540
+J2  - Telemedicine and e-Health
+LA  - en
+SN  - 1530-5627, 1556-3669
+ST  - Social Robots for People with Aging and Dementia
+UR  - https://www.liebertpub.com/doi/10.1089/tmj.2018.0051
+Y2  - 2022/03/09/20:58:01
+L1  - files/9582/Góngora Alonso et al. - 2019 - Social Robots for People with Aging and Dementia .pdf
+ER  - 
+
+TY  - JOUR
+TI  - Providing Aging Adults Social Robots’ Companionship in Home-Based Elder Care
+AU  - Chen, Na
+AU  - Song, Jing
+AU  - Li, Bin
+T2  - Journal of Healthcare Engineering
+AB  - Population aging is increasingly serious. The application of social robots for home-based elder care is an important way to solve this problem. Aging adults’ demands for social robots’ companionship affect robotic designs. This study aimed to investigate aging adults’ demands for social robots’ companionship and explored in which life situations it was appropriate to accompany aging adults by social robots. This study involved three phases. Phase 1 (an interview survey) collected the life situations in which aging adults lived alone at home. Based on the results of Phase 1, Phase 2 (a questionnaire survey) investigated aging adults’ demands for companionship, whereas Phase 3 (an expert evaluation) investigated the feasibility of the robots’ companionship for aging adults. After the three phases, this study compared aging adults’ demands for companionship with the feasibility of social robots’ companionship in each life situation. Based on the results, the life situations of dinning and watching TV, there was a greater likelihood that the companionship that aging adults needed might be provided by social robots. In the life situations of sleeping and short breaking, it was difficult that aging adults’ demands for companionship were fulfilled by social robots. Implications were discussed for home-based elder care system.
+DA  - 2019/06/04/
+PY  - 2019
+DO  - 10.1155/2019/2726837
+DP  - DOI.org (Crossref)
+VL  - 2019
+SP  - 1
+EP  - 7
+J2  - Journal of Healthcare Engineering
+LA  - en
+SN  - 2040-2295, 2040-2309
+UR  - https://www.hindawi.com/journals/jhe/2019/2726837/
+Y2  - 2022/03/09/20:58:03
+L1  - files/9583/Chen et al. - 2019 - Providing Aging Adults Social Robots’ Companionshi.pdf
+ER  - 
+
+TY  - CHAP
+TI  - Social Robots for Older Adults: Framework of Activities for Aging in Place with Robots
+AU  - Alves-Oliveira, Patrícia
+AU  - Petisca, Sofia
+AU  - Correia, Filipa
+AU  - Maia, Nuno
+AU  - Paiva, Ana
+T2  - Social Robotics
+A2  - Tapus, Adriana
+A2  - André, Elisabeth
+A2  - Martin, Jean-Claude
+A2  - Ferland, François
+A2  - Ammi, Mehdi
+AB  - According to the United Nations World Population Prospects, the world’s population is aging. Older adults constitute a fragile part of society, as aging is always accompanied by major psychological and physical challenges. A way to cope with those challenges is to strive for a good Quality of Life (QoL) and contribute to successful aging. Social robots can play an important role in the promotion of QoL by integrating activities with independent-living older adults. Using a qualitative design through a focus group method, this paper aims to present the activities in which independent-living older adults, i.e., older adults that do not depend upon anyone to carry out their activities, require a robot. By understanding the activities where robots can positively inﬂuence and contribute to older adults’ QoL, we set speciﬁc goals for the future research in the ﬁeld of Human-Robot Interaction (HRI).
+CY  - Cham
+DA  - 2015///
+PY  - 2015
+DP  - DOI.org (Crossref)
+VL  - 9388
+SP  - 11
+EP  - 20
+LA  - en
+PB  - Springer International Publishing
+SN  - 978-3-319-25553-8 978-3-319-25554-5
+ST  - Social Robots for Older Adults
+UR  - http://link.springer.com/10.1007/978-3-319-25554-5_2
+Y2  - 2022/03/09/20:58:05
+L1  - files/9584/Alves-Oliveira et al. - 2015 - Social Robots for Older Adults Framework of Activ.pdf
+ER  - 
+
+TY  - CONF
+TI  - Proof of Concept of a Social Robot for Patient Reported Outcome Measurements in Elderly Persons
+AU  - Boumans, Roel
+AU  - van Meulen, Fokke
+AU  - Hindriks, Koen
+AU  - Neerincx, Mark
+AU  - Olde Rikkert, Marcel
+T2  - HRI '18: ACM/IEEE International Conference on Human-Robot Interaction
+AB  - Medical staff uses Patient Reported Outcome Measurement (PROM) questionnaires as a means of collecting information on the effectiveness of care delivered to patients as perceived by the patients themselves. Especially for the older patient group, the PROM questioning poses an undesirable workload on the staff. This proof of concept paper investigates whether a social robot with a display can conduct such questioning in an acceptable and reliable way. A set of 15 typical questions was selected from existing PROM questionnaires. For the asking, answerprocessing and responding, a multi-modal robot-dialogue was designed and implemented. In a within-subjects experiment, 31 community-dwelling older participants answered the 15 questions in two conditions: questioning by the robot, versus questioning by a human. The main part of the robot questioning provided reliable answers, but took somewhat more time compared to human questioning. The experiment demonstrated the feasibility of a social robot for an acceptable and reliable collection of PROM data from older persons.
+C1  - Chicago IL USA
+C3  - Companion of the 2018 ACM/IEEE International Conference on Human-Robot Interaction
+DA  - 2018/03//
+PY  - 2018
+DO  - 10.1145/3173386.3177013
+DP  - DOI.org (Crossref)
+SP  - 73
+EP  - 74
+LA  - en
+PB  - ACM
+SN  - 978-1-4503-5615-2
+UR  - https://dl.acm.org/doi/10.1145/3173386.3177013
+Y2  - 2022/03/09/20:58:07
+L1  - files/9585/Boumans et al. - 2018 - Proof of Concept of a Social Robot for Patient Rep.pdf
+ER  - 
+
+TY  - JOUR
+TI  - Integrative Social Robotics Hands-on
+AU  - Fischer, Kerstin
+AU  - Seibt, Johanna
+AU  - Rodogno, Raffaele
+AU  - Rasmussen, Maike Kirkegård
+AU  - Weiss, Astrid
+AU  - Bodenhagen, Leon
+AU  - Juel, William Kristian
+AU  - Krüger, Norbert
+T2  - Interaction Studies. Social Behaviour and Communication in Biological and Artificial Systems
+AB  - In this paper, we discuss the development of robot use cases in an elderly care facility in the context of exploring the method of Integrative Social Robotics (ISR) when used on top of a user-centered design approach. Integrative Social Robotics is a new proposal for how to generate responsible, i.e. culturally and ethically sustainable, social robotics applications. Starting point for the discussion are the five principles that characterize an ISR approach, which are discussed in application to the three use cases for robot support in a Danish elderly care facility developed within the SMOOTH project. The discussion by an interdisciplinary design team explores what attention to the five principles of ISR can offer for use case development. We report on the consequences of this short-time exposure to the basic ideas of ISR for use case development and discuss the value of approaching robot development from an ISR perspective.
+DA  - 2020/01/24/
+PY  - 2020
+DO  - 10.1075/is.18058.fis
+DP  - DOI.org (Crossref)
+VL  - 21
+IS  - 1
+SP  - 145
+EP  - 185
+J2  - IS
+LA  - en
+SN  - 1572-0373, 1572-0381
+UR  - http://www.jbe-platform.com/content/journals/10.1075/is.18058.fis
+Y2  - 2022/03/09/20:58:10
+L1  - files/9587/Fischer et al. - 2020 - Integrative Social Robotics Hands-on.pdf
+ER  - 
+
+TY  - JOUR
+TI  - Preparing for a Robot Future? Social Professions, Social Robotics and the Challenges Ahead
+AU  - Pender, John
+AB  - There have been significant developments in social robotics in the care sector: in particular, in the fields of elder care and in the care and education of children and young people, especially those with specific disabling conditions such as autism. Within the context of an increased interest in the social and ethical impact of automation and robotics, this paper, based on an overview of relevant literature, addresses some pertinent issues in the field of social robotics, social care and the social professions. It opens by pointing to the increasing application of information technologies in the care field, in areas such as Assistive Technology (AT) and Assistive Learning Technology (ALT). It defines social robotics and provides examples of relevant initiatives, prototypes and products in the care field, including and up to ‘third generation’ social robots. It outlines some of the challenges, in terms of ethics, human-robot relationships, acceptance and user-centred design, social impacts and issues of autonomy and control, and points to concerns about the professional identity of care providers. It identifies the need to respond in terms of educational/CPD supports and regulatory standards, for example in relation to the Irish regulators QQI and Coru. Finally, it suggests some pedagogical approaches to these issues that may be of assistance to educators, CPD practitioners and students within the social professions.
+DA  - 2018///
+PY  - 2018
+DO  - 10.21427/D7472M
+DP  - DOI.org (Datacite)
+LA  - en
+ST  - Preparing for a Robot Future?
+UR  - https://arrow.dit.ie/ijass/vol18/iss1/4/
+Y2  - 2022/03/09/20:58:13
+L1  - files/9588/Pender - 2018 - Preparing for a Robot Future Social Professions, .pdf
+ER  - 
+
+TY  - JOUR
+TI  - Social Robotics, Elderly Care, and Human Dignity: A Recognition-Theoretical Approach
+AU  - Laitinen, Arto
+AU  - Niemelä, Marketta
+AU  - Pirhonen, Jari
+T2  - Social Robotics
+AB  - Attitudes towards robots in elderly care are systematically sceptical: a central worry is that a robot caretaker will rob the elderly of their human contacts. Are such worries justified? Will robotics change something relevant concerning the human dignity of elders? Are some specific robots especially dubious, or can robotics, as a generic technology, change the practices of care so that human dignity would be under threat? In this paper, we ask what human dignity entails in elderly care, and what kinds of threats and possibilities social robotics may bring with it. Earlier studies have approached this question, for example, in light of the capability theories of human life, consistent with human dignity. Our starting point are theories of recognition of persons, which have distinguished three main kinds of needs for recognition: the need for respect as a person, the need to feel esteemed as a contributor to the common good, and the need to be loved.
+DP  - Zotero
+SP  - 9
+LA  - en
+L1  - files/9589/Laitinen et al. - Social Robotics, Elderly Care, and Human Dignity .pdf
+ER  - 
+
+TY  - JOUR
+TI  - Developing social robots for aging populations: A literature review of recent academic sources
+AU  - Pedersen, Isabel
+AU  - Reid, Samantha
+AU  - Aspevig, Kristen
+T2  - Sociology Compass
+AB  - The perception of aging populations is a major factor driving the social robot development movement. A growing body of research reflects the expanding interest in social robots. This paper synthesizes research on the development of social robots with a literature review of academic articles with publication dates ranging from 2006 to 2017. The review is divided into three themes: (a) robots as an aid in treatment; (b) robots as social assistants and home companions; and (c) robots as custodial caregivers that are viewed in terms of ethical implications. This paper outlines the issues surrounding social, commitment, assistive, and companion robots for use in medical treatment, mental health therapy, physiotherapy, care facilities, and private homes. It describes some of the ethical concerns raised by researchers and media, including questions of control, privacy, consent, and the issue of simulated versus human compassion in caregiving. The research also points out that a rhetoric of urgency concerning aging populations drives the development of robots, which frames citizens who will benefit from robots in reductive ways. We argue that the contribution of humanities and social science research, including age studies and critical gerontology, should be better integrated with discourses of social robot development, largely from technical fields.
+DA  - 2018/06//
+PY  - 2018
+DO  - 10.1111/soc4.12585
+DP  - DOI.org (Crossref)
+VL  - 12
+IS  - 6
+SP  - e12585
+J2  - Sociology Compass
+LA  - en
+SN  - 17519020
+ST  - Developing social robots for aging populations
+UR  - https://onlinelibrary.wiley.com/doi/10.1111/soc4.12585
+Y2  - 2022/03/09/20:58:19
+L1  - files/9590/Pedersen et al. - 2018 - Developing social robots for aging populations A .pdf
+ER  - 
+
+TY  - JOUR
+TI  - The Grand Challenges in Socially Assistive Robotics
+AU  - Tapus, Adriana
+AU  - Maja, Mataric
+AU  - Scassellatti, Brian
+DA  - 2007///
+PY  - 2007
+DP  - Zotero
+SP  - 9
+LA  - en
+L1  - files/9591/Tapus et al. - 2007 - The Grand Challenges in Socially Assistive Robotic.pdf
+ER  - 
+
+TY  - JOUR
+TI  - The Rise of Social Robots: A Review of the Recent Literature
+AU  - Campa, Riccardo
+AB  - In this article I explore the most recent literature on social robotics and argue that the field of robotics is evolving in a direction that will soon require a systematic collaboration between engineers and sociologists. After discussing several problems relating to social robotics, I emphasize that two key concepts in this research area are scenario and persona. These are already popular as design tools in Human-Computer Interaction (HCI), and an approach based on them is now being adopted in Human-Robot Interaction (HRI). As robots become more and more sophisticated, engineers will need the help of trained sociologists and psychologists in order to create personas and scenarios and to “teach” humanoids how to behave in various circumstances.
+DP  - Zotero
+SP  - 8
+LA  - en
+L1  - files/9592/Campa - The Rise of Social Robots A Review of the Recent .pdf
+ER  - 
+
+TY  - CHAP
+TI  - Social Robots as Psychometric Tools for Cognitive Assessment: A Pilot Test
+AU  - Varrasi, Simone
+AU  - Di Nuovo, Santo
+AU  - Conti, Daniela
+AU  - Di Nuovo, Alessandro
+T2  - Human Friendly Robotics
+A2  - Ficuciello, Fanny
+A2  - Ruggiero, Fabio
+A2  - Finzi, Alberto
+AB  - Recent research demonstrated the beneﬁts of employing robots as therapeutic assistants and caregivers, but very little is known on the use of robots as a tool for psychological assessment. Socially capable robots can provide many advantages to diagnostic practice: engage people, guarantee standardized administration and assessor neutrality, perform automatic recording of subject behaviors for further analysis by practitioners. In this paper, we present a pilot study on testing people’s cognitive functioning via social interaction with a humanoid robot. To this end, we programmed a social robot to administer a psychometric tool for detecting Mild Cognitive Impairment, a risk factor for dementia, implementing the ﬁrst prototype of robotic assistant for mass screening of elderly population. Finally, we present a pilot test of the robotic procedure with healthy adults that show promising results of the robotic test, also compared to its traditional paper version.
+CY  - Cham
+DA  - 2019///
+PY  - 2019
+DP  - DOI.org (Crossref)
+VL  - 7
+SP  - 99
+EP  - 112
+LA  - en
+PB  - Springer International Publishing
+SN  - 978-3-319-89326-6 978-3-319-89327-3
+ST  - Social Robots as Psychometric Tools for Cognitive Assessment
+UR  - http://link.springer.com/10.1007/978-3-319-89327-3_8
+Y2  - 2022/03/09/20:58:24
+L1  - files/9593/Varrasi et al. - 2019 - Social Robots as Psychometric Tools for Cognitive .pdf
+ER  - 
+
+TY  - JOUR
+TI  - Social robots in advanced dementia
+AU  - Valentí Soler, Meritxell
+AU  - Agüera-Ortiz, Luis
+AU  - Olazarán Rodríguez, Javier
+AU  - Mendoza Rebolledo, Carolina
+AU  - Pérez Muñoz, Almudena
+AU  - Rodríguez Pérez, Irene
+AU  - Osa Ruiz, Emma
+AU  - Barrios Sánchez, Ana
+AU  - Herrero Cano, Vanesa
+AU  - Carrasco Chillón, Laura
+AU  - Felipe Ruiz, Silvia
+AU  - López Alvarez, Jorge
+AU  - León Salas, Beatriz
+AU  - Cañas Plaza, José M.
+AU  - Martín Rico, Francisco
+AU  - Abella Dago, Gonzalo
+AU  - Martínez Martín, Pablo
+T2  - Frontiers in Aging Neuroscience
+AB  - Aims: Pilot studies applying a humanoid robot (NAO), a pet robot (PARO) and a real animal (DOG) in therapy sessions of patients with dementia in a nursing home and a day care center. Methods: In the nursing home, patients were assigned by living units, based on dementia severity, to one of the three parallel therapeutic arms to compare: CONTROL, PARO and NAO (Phase 1) and CONTROL, PARO, and DOG (Phase 2). In the day care center, all patients received therapy with NAO (Phase 1) and PARO (Phase 2). Therapy sessions were held 2 days per week during 3 months. Evaluation, at baseline and follow-up, was carried out by blind raters using: the Global Deterioration Scale (GDS), the Severe Mini Mental State Examination (sMMSE), the Mini Mental State Examination (MMSE), the Neuropsychiatric Inventory (NPI), the Apathy Scale for Institutionalized Patients with Dementia Nursing Home version (APADEM-NH), the Apathy Inventory (AI) and the Quality of Life Scale (QUALID). Statistical analysis included descriptive statistics and non-parametric tests performed by a blinded investigator. Results: In the nursing home, 101 patients (Phase 1) and 110 patients (Phase 2) were included. There were no signiﬁcant differences at baseline. The relevant changes at follow-up were: (Phase 1) patients in the robot groups showed an improvement in apathy; patients in NAO group showed a decline in cognition as measured by the MMSE scores, but not the sMMSE; the robot groups showed no signiﬁcant changes between them; (Phase 2) QUALID scores increased in the PARO group. In the day care center, 20 patients (Phase 1) and 17 patients (Phase 2) were included. The main ﬁndings were: (Phase 1) improvement in the NPI irritability and the NPI total score; (Phase 2) no differences were observed at follow-up.
+DA  - 2015/09/03/
+PY  - 2015
+DO  - 10.3389/fnagi.2015.00133
+DP  - DOI.org (Crossref)
+VL  - 7
+J2  - Front. Aging Neurosci.
+LA  - en
+SN  - 1663-4365
+UR  - http://journal.frontiersin.org/Article/10.3389/fnagi.2015.00133/abstract
+Y2  - 2022/03/09/20:58:26
+L1  - files/9601/Valentí Soler et al. - 2015 - Social robots in advanced dementia.pdf
+ER  - 
+
+TY  - JOUR
+TI  - Attitudinal Change in Elderly Citizens Toward Social Robots: The Role of Personality Traits and Beliefs About Robot Functionality
+AU  - Damholdt, Malene F.
+AU  - Nørskov, Marco
+AU  - Yamazaki, Ryuji
+AU  - Hakli, Raul
+AU  - Hansen, Catharina Vesterager
+AU  - Vestergaard, Christina
+AU  - Seibt, Johanna
+T2  - Frontiers in Psychology
+AB  - Attitudes toward robots inﬂuence the tendency to accept or reject robotic devices. Thus it is important to investigate whether and how attitudes toward robots can change. In this pilot study we investigate attitudinal changes in elderly citizens toward a tele-operated robot in relation to three parameters: (i) the information provided about robot functionality, (ii) the number of encounters, (iii) personality type. Fourteen elderly residents at a rehabilitation center participated. Pre-encounter attitudes toward robots, anthropomorphic thinking, and personality were assessed. Thereafter the participants interacted with a tele-operated robot (Telenoid) during their lunch (c. 30 min.) for up to 3 days. Half of the participants were informed that the robot was teleoperated (IC) whilst the other half were naïve to its functioning (UC). Post-encounter assessments of attitudes toward robots and anthropomorphic thinking were undertaken to assess change. Attitudes toward robots were assessed with a new generic 35-items questionnaire (attitudes toward social robots scale: ASOR-5), offering a differentiated conceptualization of the conditions for social interaction. There was no signiﬁcant difference between the IC and UC groups in attitude change toward robots though trends were observed. Personality was correlated with some tendencies for attitude changes; Extraversion correlated with positive attitude changes to intimate-personal relatedness with the robot (r = 0.619) and to psychological relatedness (r = 0.581) whilst Neuroticism correlated negatively (r = −0.582) with mental relatedness with the robot. The results tentatively suggest that neither information about functionality nor direct repeated encounters are pivotal in changing attitudes toward robots in elderly citizens. This may reﬂect a cognitive congruence bias where the robot is experienced in congruence with initial attitudes, or it may support action-based explanations of cognitive dissonance reductions, given that robots, unlike computers, are not yet perceived as action targets. Speciﬁc personality traits may be indicators of attitude change relating to speciﬁc domains of social interaction. Implications and future directions are discussed.
+DA  - 2015/11/20/
+PY  - 2015
+DO  - 10.3389/fpsyg.2015.01701
+DP  - DOI.org (Crossref)
+VL  - 6
+J2  - Front. Psychol.
+LA  - en
+SN  - 1664-1078
+ST  - Attitudinal Change in Elderly Citizens Toward Social Robots
+UR  - http://journal.frontiersin.org/Article/10.3389/fpsyg.2015.01701/abstract
+Y2  - 2022/03/09/20:58:28
+L1  - files/9602/Damholdt et al. - 2015 - Attitudinal Change in Elderly Citizens Toward Soci.pdf
+ER  - 
+
+TY  - JOUR
+TI  - The Effectiveness of Social Robots for Older Adults: A Systematic Review and Meta-Analysis of Randomized Controlled Studies
+AU  - Pu, Lihui
+AU  - Moyle, Wendy
+AU  - Jones, Cindy
+AU  - Todorovic, Michael
+T2  - The Gerontologist
+AB  - Background and Objectives:  Social robots may promote the health of older adults by increasing their perceived emotional support and social interaction. This review aims to summarize the effectiveness of social robots on outcomes (psychological, physiological, quality of life, or medications) of older adults from randomized controlled trials (RCTs).
+DA  - 2019/01/09/
+PY  - 2019
+DO  - 10.1093/geront/gny046
+DP  - DOI.org (Crossref)
+VL  - 59
+IS  - 1
+SP  - e37
+EP  - e51
+LA  - en
+SN  - 0016-9013, 1758-5341
+ST  - The Effectiveness of Social Robots for Older Adults
+UR  - https://academic.oup.com/gerontologist/article/59/1/e37/5036100
+Y2  - 2022/03/09/20:58:31
+L1  - files/9604/Pu et al. - 2019 - The Effectiveness of Social Robots for Older Adult.pdf
+ER  - 
+
+TY  - JOUR
+TI  - Development and Usability Validation of a Social Robot Platform for Physical and Cognitive Stimulation in Elder Care Facilities
+AU  - Cobo Hurtado, Luis
+AU  - Viñas, Pablo Francisco
+AU  - Zalama, Eduardo
+AU  - Gómez-García-Bermejo, Jaime
+AU  - Delgado, José María
+AU  - Vielba García, Beatriz
+T2  - Healthcare
+AB  - This article shows our work for developing an elder care platform for social interaction and physical and cognitive stimulation using the Pepper robot and Android OS as clients, based on the knowledge acquired on our long-term social robotics research experience. The ﬁrst results of the user’s acceptance of the solution are presented in this article. The platform is able to provide different services to the user, such as information, news, games, exercises or music. The games, which have a bi-modal way of interacting (speech and a touch screen interface), have been designed for cognitive stimulation based on the items of the mini-mental state examination. The results of the user’s performance are stored in a cloud database and can be reviewed by therapists through a web interface that also allows them to establish customized therapy plans for each user. The platform has been tested and validated, ﬁrst using adult people and then deployed to an elder care facility where the robot has been interacting with users for a long period of time. The results and feedback received have shown that the robot can help to keep the users physically and mentally active as well as establish an emotional link between the user and the robot.
+DA  - 2021/08/19/
+PY  - 2021
+DO  - 10.3390/healthcare9081067
+DP  - DOI.org (Crossref)
+VL  - 9
+IS  - 8
+SP  - 1067
+J2  - Healthcare
+LA  - en
+SN  - 2227-9032
+UR  - https://www.mdpi.com/2227-9032/9/8/1067
+Y2  - 2022/03/09/20:58:32
+L1  - files/9605/Cobo Hurtado et al. - 2021 - Development and Usability Validation of a Social R.pdf
+ER  - 
+
+TY  - JOUR
+TI  - Influence of Social Presence on Acceptance of an Assistive Social Robot and Screen Agent by Elderly Users
+AU  - Heerink, Marcel
+AU  - Kröse, Ben
+AU  - Evers, Vanessa
+AU  - Wielinga, Bob
+T2  - Advanced Robotics
+AB  - When using a robot or a screen agent, elderly users might feel more enjoyment if they experience a stronger social presence. In two experiments with a robotic agent and a screen agent (both n = 30) this relationship between these two concepts could be conﬁrmed. In addition, both studies showed that social presence correlates with the Intention to Use the system, although there were some differences between the agents. This implicates that factors that inﬂuence social presence are relevant when designing assistive agents for elderly people.
+DA  - 2009/01//
+PY  - 2009
+DO  - 10.1163/016918609X12518783330289
+DP  - DOI.org (Crossref)
+VL  - 23
+IS  - 14
+SP  - 1909
+EP  - 1923
+J2  - Advanced Robotics
+LA  - en
+SN  - 0169-1864, 1568-5535
+UR  - https://www.tandfonline.com/doi/full/10.1163/016918609X12518783330289
+Y2  - 2022/03/09/20:58:34
+L1  - files/9606/Heerink et al. - 2009 - Influence of Social Presence on Acceptance of an A.pdf
+ER  - 
+
+TY  - CONF
+TI  - Measuring acceptance of an assistive social robot: a suggested toolkit
+AU  - Heerink, Marcel
+AU  - Krose, Ben
+AU  - Evers, Vanessa
+AU  - Wielinga, Bob
+T2  - RO-MAN 2009 - The 18th IEEE International Symposium on Robot and Human Interactive Communication
+AB  - The human robot interaction community is multidisciplinary by nature and has members from social science to engineering backgrounds. In this paper we aim to provide human robot developers with a straightforward toolkit to evaluate users’ acceptance of assistive social robots they are designing or developing for elderly care environments. We will explain how we developed the measures for this analysis, provide do’s and don’ts in designing the experiments, demonstrate the application of the measures we have developed for this purpose and the analysis and interpretation of the data. As such we hope to engage human robot interaction developers in evaluating the acceptability of their own robot to inform the development process and improve the final robot’s design.
+C1  - Toyama, Japan
+C3  - RO-MAN 2009 - The 18th IEEE International Symposium on Robot and Human Interactive Communication
+DA  - 2009/09//
+PY  - 2009
+DO  - 10.1109/ROMAN.2009.5326320
+DP  - DOI.org (Crossref)
+SP  - 528
+EP  - 533
+LA  - en
+PB  - IEEE
+SN  - 978-1-4244-5081-7
+ST  - Measuring acceptance of an assistive social robot
+UR  - http://ieeexplore.ieee.org/document/5326320/
+Y2  - 2022/03/09/20:58:36
+L1  - files/9607/Heerink et al. - 2009 - Measuring acceptance of an assistive social robot.pdf
+ER  - 
+
+TY  - CONF
+TI  - Interactive multimodal social robot for improving quality of care of elderly in Australian nursing homes
+AU  - Khosla, Rajiv
+AU  - Chu, Mei-Tai
+AU  - Kachouie, Reza
+AU  - Yamada, Keiji
+AU  - Yoshihiro, Fujita
+AU  - Yamaguchi, Tomoharu
+T2  - the 20th ACM international conference
+AB  - This paper describes the design of multimodal robotic system, embodiment of multimodal interaction (voice, gestures, emotion, touch panel and dance) in assistive social robot (Matilda) for modeling group based and one-to-one interactions with technology adverse elderly in nursing homes. It describes the human-centered evaluation of Matilda based on quality, naturalness, user satisfaction and predictive accuracy based on first ever field trials in Australia. The multimodal social robots have facilitated breaking the technology barriers with the elderly leading to several aged care facilities and community centers showing interest in future trials.
+C1  - Nara, Japan
+C3  - Proceedings of the 20th ACM international conference on Multimedia - MM '12
+DA  - 2012///
+PY  - 2012
+DO  - 10.1145/2393347.2396411
+DP  - DOI.org (Crossref)
+SP  - 1173
+LA  - en
+PB  - ACM Press
+SN  - 978-1-4503-1089-5
+UR  - http://dl.acm.org/citation.cfm?doid=2393347.2396411
+Y2  - 2022/03/09/20:58:38
+L1  - files/9608/Khosla et al. - 2012 - Interactive multimodal social robot for improving .pdf
+ER  - 
+
+TY  - JOUR
+TI  - Use of Social Robots in Mental Health and Well-Being Research: Systematic Review
+AU  - Scoglio, Arielle AJ
+AU  - Reilly, Erin D
+AU  - Gorman, Jay A
+AU  - Drebing, Charles E
+T2  - Journal of Medical Internet Research
+AB  - Background: Technology-assisted clinical interventions are increasingly common in the health care field, often with the proposed aim to improve access to and cost-effectiveness of care. Current technology platforms delivering interventions are largely mobile apps and online websites, although efforts have been made to create more personalized and embodied technology experiences. To extend and improve on these platforms, the field of robotics has been increasingly included in conversations of how to deliver technology-assisted, interactive, and responsive mental health and psychological well-being interventions. Socially assistive robots (SARs) are robotic technology platforms with audio, visual, and movement capabilities that are being developed to interact with individuals socially while also assisting them with management of their physical and psychological well-being. However, little is known about the empirical evidence or utility of using SARs in mental health interventions.
+Objective: The review synthesizes and describes the nascent empirical literature of SARs in mental health research and identifies strengths, weaknesses, and opportunities for improvement in future research and practice.
+Methods: Searches in Medline, PsycINFO, PsycARTICLES, PubMed, and IEEE Xplore yielded 12 studies included in the final review after applying inclusion and exclusion criteria. Abstract and full-text reviews were conducted by two authors independently.
+Results: This systematic review of the literature found 5 distinct SARs used in research to investigate the potential for this technology to address mental health and psychological well-being outcomes. Research on mental health applications of SARs focuses largely on elderly dementia patients and relies on usability pilot data with methodological limitations.
+Conclusions: The current SARs research in mental health use is limited in generalizability, scope, and measurement of psychological outcomes. Opportunities for expansion of research in this area include diversifying populations studied, SARs used, clinical applications, measures used, and settings for those applications.
+DA  - 2019/07/24/
+PY  - 2019
+DO  - 10.2196/13322
+DP  - DOI.org (Crossref)
+VL  - 21
+IS  - 7
+SP  - e13322
+J2  - J Med Internet Res
+LA  - en
+SN  - 1438-8871
+ST  - Use of Social Robots in Mental Health and Well-Being Research
+UR  - http://www.jmir.org/2019/7/e13322/
+Y2  - 2022/03/09/20:58:41
+L1  - files/9610/Scoglio et al. - 2019 - Use of Social Robots in Mental Health and Well-Bei.pdf
+ER  - 
+
+TY  - JOUR
+TI  - Can a humanoid social robot stimulate the interactivity of cognitively impaired elderly? A thorough study based on computer vision methods
+AU  - Tulsulkar, Gauri
+AU  - Mishra, Nidhi
+AU  - Thalmann, Nadia Magnenat
+AU  - Lim, Hwee Er
+AU  - Lee, Mei Ping
+AU  - Cheng, Siok Khoong
+T2  - The Visual Computer
+AB  - Social Assistive Robotics is increasingly being used in care settings to provide psychosocial support and interventions for the elderly with cognitive impairments. Most of these social robots have provided timely stimuli to the elderly at home and in care centres, including keeping them active and boosting their mood. However, previous investigations have registered shortcomings in these robots, particularly in their ability to satisfy an essential human need: the need for companionship. Reports show that the elderly tend to lose interests in these social robots after the initial excitement as the novelty wears out and the monotonous familiarity becomes all too familiar. This paper presents our research facilitating conversations between a social humanoid robot, Nadine, and cognitively impaired elderly at a nursing home. We analysed the effectiveness of human–humanoid interactions between our robot and 14 elderly over 29 sessions. We used both objective tools (based on computer vision methods) and subjective tools (based on observational scales) to evaluate the recorded videos. Our ﬁndings showed that our subjects engaged positively with Nadine, suggesting that their interaction with the robot could improve their well-being by compensating for some of their emotional, cognitive, and psychosocial deﬁciencies. We detected emotions associated with cognitively impaired elderly during these interactions. This study could help understand the expectations of the elderly and the current limitations of Social Assistive Robots. Our research is aligned with all the ethical recommendations by the NTU Institutional Review Board.
+DA  - 2021/12//
+PY  - 2021
+DO  - 10.1007/s00371-021-02242-y
+DP  - DOI.org (Crossref)
+VL  - 37
+IS  - 12
+SP  - 3019
+EP  - 3038
+J2  - Vis Comput
+LA  - en
+SN  - 0178-2789, 1432-2315
+ST  - Can a humanoid social robot stimulate the interactivity of cognitively impaired elderly?
+UR  - https://link.springer.com/10.1007/s00371-021-02242-y
+Y2  - 2022/03/09/20:58:43
+L1  - files/9616/Tulsulkar et al. - 2021 - Can a humanoid social robot stimulate the interact.pdf
+ER  - 
+
+TY  - JOUR
+TI  - Factors Affecting the Acceptability of Social Robots by Older Adults Including People with Dementia or Cognitive Impairment: A Literature Review
+AU  - Whelan, Sally
+AU  - Murphy, Kathy
+AU  - Barrett, Eva
+AU  - Krusche, Cheryl
+AU  - Santorelli, Adam
+AU  - Casey, Dympna
+T2  - International Journal of Social Robotics
+AB  - Social robots are being developed to support care given to older adults (OA), people with dementia (PWD) and OA with mild cognitive impairment (MCI) by facilitating their independence and well-being. The successful deployment of robots should be guided by knowledge of factors which affect acceptability. This paper critically reviews empirical studies which have explored how acceptability issues impact OA, PWD and OA with MCI. The aim is to identify the factors governing acceptability, to ascertain what is likely to improve acceptability and make recommendations for future research. A search of the literature published between 2005 and 2015 revealed a relatively small body of relevant work has been conducted focusing on the acceptability of robots by PWD or OA with MCI (n = 21), and on acceptability for OA (n = 23). The ﬁndings are presented using constructs from the Almere robot acceptance model. They reveal acceptance of robots is affected by multiple interacting factors, pertaining to the individual, signiﬁcant others and the wider society. Acceptability can be improved through robots using humanlike communication, being personalised in response to individual users’ needs and including issues of trust and control of the robot which relates to degrees of robot adaptivity. However, most studies are of short duration, have small sample sizes and some do not involve actual robot usage or are conducted in laboratories rather than in real world contexts. Larger randomised controlled studies, conducted in the context where robots will be deployed, are needed to investigate how acceptance factors are affected when humans use robots for longer periods of time and become habituated to them.
+DA  - 2018/11//
+PY  - 2018
+DO  - 10.1007/s12369-018-0471-x
+DP  - DOI.org (Crossref)
+VL  - 10
+IS  - 5
+SP  - 643
+EP  - 668
+J2  - Int J of Soc Robotics
+LA  - en
+SN  - 1875-4791, 1875-4805
+ST  - Factors Affecting the Acceptability of Social Robots by Older Adults Including People with Dementia or Cognitive Impairment
+UR  - http://link.springer.com/10.1007/s12369-018-0471-x
+Y2  - 2022/03/09/20:59:14
+L1  - files/9626/Whelan et al. - 2018 - Factors Affecting the Acceptability of Social Robo.pdf
+ER  - 
+
+TY  - CHAP
+TI  - Social Robotics
+AU  - Breazeal, Cynthia
+AU  - Dautenhahn, Kerstin
+AU  - Kanda, Takayuki
+T2  - Springer Handbook of Robotics
+A2  - Siciliano, Bruno
+A2  - Khatib, Oussama
+T3  - Springer Handbooks
+AB  - This chapter surveys some of the principal research trends in Social Robotics and its application to human–robot interaction (HRI ). Social (or Sociable) robots are designed to interact with people in a natural, interpersonal manner – often to achieve positive outcomes in diverse applications such as education, health, quality of life, entertainment, communication, and tasks requiring collaborative teamwork. The long-term goal of creating social robots that are competent and capable partners for people is quite a challenging task. They will need to be able to communicate naturally with people using both verbal and nonverbal signals. They will need to engage us not only on a cognitive level, but on an emotional level as well in order to provide effective social and task-related support to people. They will need a wide range of social-cognitive skills and a theory of other minds to understand human behavior, and to be intuitively understood by people. A deep understanding of human intelligence and behavior across multiple dimensions (i. e., cognitive, affective, physical, social, etc.) is necessary in order to design robots that can successfully play a beneficial role in the daily lives of people. This requires a multidisciplinary approach where the design of social robot technologies and methodologies are informed by robotics, artificial intelligence, psychology, neuroscience, human factors, design, anthropology, and more.
+CY  - Cham
+DA  - 2016///
+PY  - 2016
+DP  - Springer Link
+SP  - 1935
+EP  - 1972
+LA  - en
+PB  - Springer International Publishing
+SN  - 978-3-319-32552-1
+UR  - https://doi.org/10.1007/978-3-319-32552-1_72
+Y2  - 2022/03/09/21:02:08
+L1  - files/9586/breazeal2016.pdf
+KW  - Ambient Assisted Living
+KW  - False Belief Task
+KW  - Humanoid Robot
+KW  - Robot Interaction
+KW  - Social Robot
+ER  - 
+
