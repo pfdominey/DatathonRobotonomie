@@ -2,7 +2,7 @@ A. Semantic similairity
 1.  collect photgraphs and 50-100 word texts describing the texts
 2.    (show the photo, user speaks, system transforms speech to text)
 3.  perform semantic similarity analysis on texts
-4.    do pretreatment of text if necessary
+4.    do pretreatment of text if necessary (is there an advantage or not for pre-structured text?)
 5.  perform semantic similarity analysis on images (for the moment we are not sure if this is possible)
 6.  create semantic_similarity_matrix
 7.  find trajectory in matrix to visit different similar photo pairs
