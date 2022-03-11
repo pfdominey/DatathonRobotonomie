@@ -2,12 +2,13 @@ A. Semantic similairity
 1.  collect photgraphs and 50-100 word texts describing the texts
 2.    (show the photo, user speaks, system transforms speech to text)
 3.  perform semantic similarity analysis on texts
-4.  perform semantic similarity analysis on images (for the moment we are not sure if this is possible)
-5.  create semantic_similarity_matrix
-6.  find trajectory in matrix to visit different similar photo pairs
-7.  present sequence in a coheret interaction scenario
-8.  use french language
-9.  use Beam robot to present the interaction
+4.    do pretreatment of text if necessary
+5.  perform semantic similarity analysis on images (for the moment we are not sure if this is possible)
+6.  create semantic_similarity_matrix
+7.  find trajectory in matrix to visit different similar photo pairs
+8.  present sequence in a coheret interaction scenario
+9.  use french language
+10.  use Beam robot to present the interaction
 
 Detection and interaction with person
 
