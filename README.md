@@ -1,8 +1,6 @@
 # DatathonRobotonomie
 
-Finally, it may be a good idea to have some structue in the  texts that describe the photos.  See my example
-
-Some will work on the python, others on biblio, scenarios etc.
+See the file in this folder called word.md
 
 Related to the python coding:
 
