@@ -12,11 +12,11 @@ A. Semantic similairity
 
 B. Detection and interaction with person
 
-8. Detection and interaction with person
-9. Recognize face from camera
-10. associate recognized face with photos that were provided
-11. associate face with other features (name, sex, hobbies)
-12. simple spoken language interaction
+10. Detection and interaction with person1 
+11. Recognize face from camera
+12. associate recognized face with photos that were provided
+13. associate face with other features (name, sex, hobbies)
+14. CHATBOT - simple spoken language interaction
 
 C. Integration onto Beam - purely in telepresence mode: sharing screen and microphone
 
