@@ -1,0 +1,82 @@
+# Summary of the meeting (2022-03-30)
+
+Were present : Louis Delamarre, Vincent Demey, Dorine Maillet, Bassam Kurdy, Magda Alsaleh, Mahmoud Ali, Melodie Opale
+Were absent : Sami Ezzahid, Celine Petersson, Thomas Forest, Camille Huillet-Miraton, Imad Sfeir, Peter Dominey
+
+
+## Goals : 
+* Present the suggested chunks of work to be done during the datathon by subgroups of the team
+* Allocate participants to subgroups, even if the goal is not to work in isolation but to promote collaboration and cross-polination
+
+
+## Chunking the challenge into tasks
+
+### 1. Data Collection  The initial proposition was to collect all the material (name of user, photos, texts...) in a folder or directory that we will access to analyze the data. 
+  It requires a careful organisation to have similar file formats ... that may slow down the analysis as it can require secondary transformation of the raw data.
+  Louis suggested using a collection system to collect the users' inputs into a dataframe that is already fit for analysis. For the challenge, we 
+  can use Google Forms or any other form generator. 
+  
+  The suggested proprieties of the database are : 
+    * user name 
+    * user face photo : to allow for face recognition 
+    * title : the title of the depicted situation
+    * text : the text describing the user's memory/feelings/thoughts about the photo. 
+      ** Peter proposed the following questions to help users in describing their pictures :
+        1.	What is this photo?
+        2.	Where did you take this photo?
+        3.	When did you take this photo?
+        4.	Who was with you when you took this photo?
+        5.	Why do you like this photo?
+    * photo : the photo to be uploaded
+    
+  Bassam asked if it would be useful to collect more than those elements (habits, where people lived, information about family...) to mimic what a caregiver
+  might know about the elderly people of a nursing home, so that information can be used to reproduce the interaction a caregiver has with an elderly resident.
+  I point that what is intended is not a strict replacement of human-human interaction, but an adjunct to facilitate social bonding between residents. 
+  Maybe @Peter and @Imad can tell us more about what they think of this idea of @Bassam ? 
+  
+  
+### 2. Text analysis :  The objective is to measure text similarity so we can build a similarity matrix that allows us to create a path of the discussion in the group session.
+  Peter already provided elements and segments of code to help in preparing this analysis.
+  
+  
+### 3. Image analysis :  This task was not planned initially, but can be interesting in achieving our goal, for the following purposes : 
+  
+    * face recognition : From a picture (or selfie) of the participant, the robot might be able to detect who is joining the group session and access their
+    data to build the discussion from the experiences they shared.
+      ** Bassam added that users' selfies may help in deriving age and sex from them and to better identify who they are or what their background is. That is 
+      not the primary objective of the challenge, as it is supposed to use the situations the users choose to share to create a discussion and stimulate social 
+      bond. 
+      
+    
+    * image analysis from the photos the participants provided : 
+      ** Mahmoud added that image similarity analysis and scenic analysis required considerably more time and resources than text analysis, depends on the 
+      definition and the frame of the image... So not so straightforward. Bassam added that the similarity between the text and the image might be interesting.
+      One way I see it is that finding similarity between text from one user and a photo of another that are not available in the text similarity analysis might
+      be useful to create connections between users. 
+      
+      
+    
+    
+### 4. Human-Robot interaction :   This task is about what and how we program the robot to interact with humans. Peter demonstrated an interaction last week. We first think about a robot 
+  that speak and can speak to each user, show pictures and develop sentences specific to the photos and texts it has access to. 
+    * Mahmoud asks about the programming language that will be used by the robot. This information is needed to discuss about what APIs are required, and to
+    get from the inputs and the outputs of the program.
+    
+      ** @Peter, can you tell us more about that ? 
+   
+    
+    
+ ## Allocate participants to subgroups
+ 
+ ### Data collection : no specific member for now
+ ### Text analysis : Bassam, Magda, Melodie
+ ### Image analysis : Mahmoud, Bassam
+ ### Human-Robot Interaction : no specific member for now
+  
+ ## Misc. 
+ Mahmoud : Who will be at Dijon for the datathon ? 
+  Will be present : Vincent, Louis, Peter, Imad ?, Melodie.
+  Will be online : Bassam, Magda.
+  
+Mahmoud asks if the Datathon Board has something organized for the accomodation ? 
+  I don't know, but maybe @Peter, @Patrick Callier, @Dorine can tell us more.
