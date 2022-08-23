@@ -4,14 +4,15 @@ import sys
 def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
-needed_packages = ["face_recognition",
+needed_packages = [ "dlib",
+                    "face_recognition",
                     "opencv-python",
                     "numpy",
                     "gtts",
                     "playsound",
                     "pandas",
                     "sentence_transformers",
-                    "screeninfo"]
+                    "screeninfo" ]
 
 for package in needed_packages:
     install(package)
