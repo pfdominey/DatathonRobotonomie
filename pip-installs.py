@@ -6,7 +6,8 @@ def install(package):
     else:
         pip._internal.main(['install', package])
 
-needed_packages = [ "dlib",
+needed_packages = [ "cmake"
+                    "dlib",
                     "face_recognition",
                     "opencv-python",
                     "numpy",
