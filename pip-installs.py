@@ -1,4 +1,5 @@
 import pip
+import os
 
 def install(package):
     if hasattr(pip, 'main'):
@@ -6,8 +7,7 @@ def install(package):
     else:
         pip._internal.main(['install', package])
 
-needed_packages = [ "dlib-19.22.99-cp310-cp310-win_amd64.whl"
-                    "cmake",
+needed_packages = [ "cmake",
                     "face_recognition",
                     "opencv-python",
                     "numpy",
