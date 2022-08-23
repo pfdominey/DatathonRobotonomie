@@ -1,7 +1,6 @@
 # by Tristan Pinon
 # tristan.pinon@reseau.eseo.fr
 
-from email.mime import image
 import sys
 import os
 import shutil
