@@ -20,7 +20,7 @@ image_directory = f"{os.getcwd()}/data"
 #CAREFUL!!! you need to check the filepath to the images before you run the code
 
 #Reference to webcam
-video_capture = cv2.VideoCapture(1)
+video_capture = cv2.VideoCapture(0)
 
 # get the size of the screen
 screen = screeninfo.get_monitors()[screen_id]
