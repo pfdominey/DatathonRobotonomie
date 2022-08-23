@@ -5,7 +5,7 @@ def install(package):
     subprocess.check_call([sys.executable, "-m", "pip", "install", package])
 
 needed_packages = ["face_recognition",
-                    "cv2",
+                    "opencv-python",
                     "numpy",
                     "gtts",
                     "playsound",
