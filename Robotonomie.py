@@ -15,7 +15,7 @@ screen_id = 0
 is_color = False
 
 # get the directory where patients folders are stored
-image_directory = 'data'
+image_directory = f"{os.getcwd()}/data"
 
 #CAREFUL!!! you need to check the filepath to the images before you run the code
 
