@@ -1,8 +1,10 @@
-import subprocess
-import sys
+import pip
 
 def install(package):
-    subprocess.check_call([sys.executable, "-m", "pip", "install", package])
+    if hasattr(pip, 'main'):
+        pip.main(['install', package])
+    else:
+        pip._internal.main(['install', package])
 
 needed_packages = [ "dlib",
                     "face_recognition",
