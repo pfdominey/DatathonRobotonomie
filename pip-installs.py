@@ -15,7 +15,9 @@ needed_packages = [ "cmake",
                     "playsound",
                     "pandas",
                     "sentence_transformers",
-                    "screeninfo" ]
+                    "screeninfo",
+                    "PyAudio",
+                    "SpeechRecognition" ]
 
 for package in needed_packages:
     install(package)
