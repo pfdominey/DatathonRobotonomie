@@ -12,7 +12,6 @@ import pandas as pd
 from sentence_transformers import SentenceTransformer, util
 import screeninfo
 import speech_recognition as sr
-from torch import embedding
 
 screen_id = 0
 is_color = False
