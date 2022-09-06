@@ -1,7 +1,6 @@
 # edited by Tristan Pinon
 # tristan.pinon@reseau.eseo.fr
 
-from lib2to3.pytree import convert
 import face_recognition
 import cv2
 import numpy as np
