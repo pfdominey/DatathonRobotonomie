@@ -87,7 +87,7 @@ def recognize_face():
         face_names.append(name)
 
     frame = draw_rectangle_around_face(frame, face_locations, face_names)
-
+    
     return face_names, frame
 
 
@@ -350,23 +350,25 @@ def main_face_recog():
     old_face_names = face_names
 
 def main_speech_recog():
-
-    if hey_listen(r, m):
+    
+    if hey_listen(r, m) :
         research_completed = False
         try :
             speech_as_text = recognize(r, m, "oui ?")
+            print(speech_as_text)
         
             for word in killwords + keywords:
                 if word in speech_as_text :
                     if word in killwords : 
                         convert_text_to_speech("Au-revoir !", lang, "7")
-                        break
+                        destroy_windows()
                     elif word in keywords :
-                        face_names = recognize_face()
+                        face_names, frame = recognize_face()
                         if len(face_names) == 2:
                             researched_name = recognize(r, m, f"Depuis les images de {face_names[0]} ? Ou bien celles de {face_names[1]} ?").upper()
                         elif len(face_names) == 1:
                             researched_name = face_names[0]
+                            face_names.append('')
                         else:
                             break
                         for word in researched_name.split():
@@ -384,7 +386,9 @@ def main_speech_recog():
                         main_face_recog(face_names, frame)
         except sr.UnknownValueError:
             pass
-        if not research_completed : convert_text_to_speech("Désolée, je n'ai pas compris.", lang, "7")
+        if not research_completed : 
+            convert_text_to_speech("Désolée, je n'ai pas compris.", lang, "7")
+            
 
 
 if __name__ == '__main__':
@@ -411,5 +415,3 @@ if __name__ == '__main__':
             r.adjust_for_ambient_noise(source)
 
         main_speech_recog()
-
-        destroy_windows()
