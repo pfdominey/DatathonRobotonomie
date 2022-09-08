@@ -201,7 +201,7 @@ class MainWindow(QWidget):
             self.listClicked()
 
     def createProfile(self):
-        name = self.searchBar.text().upper()
+        name = self.searchBar.text().upper().replace(' ', '-')
         try :
             os.mkdir(f"./{imageDirectory}/{name}")
             item = QListWidgetItem(name)

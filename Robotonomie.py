@@ -11,6 +11,7 @@ import pandas as pd
 from sentence_transformers import SentenceTransformer, util
 import screeninfo
 import speech_recognition as sr
+import threading
 
 screen_id = 0
 is_color = False
@@ -35,11 +36,11 @@ keywords = ['montre', 'montrer']
 facewords = ['reconnaissance', 'faciale']
 killwords = ['revoir', 'à bientôt']
 
-def convert_text_to_speech(txt, lang, ind):
+def convert_text_to_speech(txt, lang):
     tts = gtts.gTTS(txt, lang=lang)
-    tts.save(f"{ind}.mp3")
-    playsound(f"{ind}.mp3", True)
-    os.remove(f"{ind}.mp3")
+    tts.save(f"gtts.mp3")
+    playsound(f"gtts.mp3", True)
+    os.remove(f"gtts.mp3")
     print("Robotonomy : " + txt)                                                                      #DEBUG
 
 
@@ -273,6 +274,7 @@ def hey_listen(r, audio):
         audio = r.listen(source, phrase_time_limit=3)
     try:
         speech_as_text = r.recognize_google(audio, language="fr-FR")
+        print("user : " + speech_as_text)
         for wakeword in wakewords:
             if wakeword in speech_as_text:
                 ret = True
@@ -285,11 +287,25 @@ def hey_listen(r, audio):
         print("Le service Google Speech API a rencontré une erreur" + format(e))
 
 def recognize(r, m, text):
-    convert_text_to_speech(text, lang, "7")
+    convert_text_to_speech(text, lang)
     with m as source:
         audio = r.listen(source, phrase_time_limit=5)
     speech_as_text = r.recognize_google(audio, language="fr-FR")
+    print("user : " + speech_as_text)
     return speech_as_text
+
+def animatedBackground():
+    background_i = 0
+    while True:
+        img_wl = cv2.imread(f'background/{background_i}.png', cv2.IMREAD_COLOR)
+        window_name = "Robotonomie"
+        cv2.namedWindow(window_name, cv2.WND_PROP_FULLSCREEN)
+        cv2.moveWindow(window_name, screen.x - 1, screen.y - 1)
+        cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+        cv2.imshow(window_name, img_wl)
+        cv2.waitKey(1000)
+
+        background_i = background_i + 1 if background_i <3 else 0
 
 def destroy_windows():
     windows = ("Camera", "Photo1", "Photo2", "Photo3")
@@ -300,20 +316,18 @@ def destroy_windows():
             pass
 
 def main_face_recog():
-    old_face_names = []
     face_names, frame = recognize_face()
 
-    if face_names != old_face_names and len(face_names) == 2:
+    if len(face_names) == 2:
 
-        # img = cv2.imread(test_img, cv2.IMREAD_COLOR)
         small_frame = resize_keeping_aspect_ratio(frame, width=500)
         cv2.namedWindow("Camera")
         cv2.moveWindow("Camera", (screen.width - small_frame.shape[1])//2, 10)
         cv2.imshow("Camera", small_frame)
         cv2.waitKey(1)
 
-        text = f"Bienvenue sur Robotonomy Systems, {face_names[0]} et {face_names[1]} "
-        convert_text_to_speech(text, lang, "2")
+        text = f"Ravie de vous revoir, {face_names[0]} et {face_names[1]} "
+        convert_text_to_speech(text, lang)
 
         similarite = get_similar_files(face_names[0], face_names[1])
 
@@ -332,22 +346,20 @@ def main_face_recog():
             # Title
             title_img = similarite[i][1]
             title_txt_dialog = f"{face_names[i]}, vous souvenez-vous de cette image ? Elle est intitulée : {title_img}"
-            convert_text_to_speech(title_txt_dialog, lang, "3")
+            convert_text_to_speech(title_txt_dialog, lang)
 
             # Text
             text_img = similarite[i][2]
             text_img_dialog = f"Je peux vous rappeler ce que vous m'aviez dit à son sujet"
-            convert_text_to_speech(text_img_dialog, lang, "4")
+            convert_text_to_speech(text_img_dialog, lang)
             text_img_dialog2 = f"Vous m'aviez dit : {text_img}"
-            convert_text_to_speech(text_img_dialog2, lang, "5")
+            convert_text_to_speech(text_img_dialog2, lang)
 
         end = f"{face_names[0]}, et {face_names[1]}, J'ai remarqué que vous aviez des intérêts communs, vous pouvez " \
             "discuter et partager ces intérêts l'un avec l'autre, pendant ce temps, je peux vous montrer d'autres photos. " \
             "Si vous me dites : Robot, montre-moi une photo de vélo, je vous montrerais une photo de vélo parmis vos photos. " \
-            "Quand vous aurez fini, dites simplement 'Robot, au revoir !' "
-        convert_text_to_speech(end, lang, "6")
-
-    old_face_names = face_names
+            "Quand vous aurez fini, dites simplement Robot, au revoir ! "
+        convert_text_to_speech(end, lang)
 
 def main_speech_recog():
     
@@ -357,13 +369,17 @@ def main_speech_recog():
             speech_as_text = recognize(r, m, "oui ?")
             print(speech_as_text)
         
-            for word in killwords + keywords:
+            for word in killwords + keywords + facewords:
                 if word in speech_as_text :
                     if word in killwords : 
-                        convert_text_to_speech("Au-revoir !", lang, "7")
+                        convert_text_to_speech("Au-revoir !", lang)
                         destroy_windows()
+                        research_completed = True
                     elif word in keywords :
-                        face_names, frame = recognize_face()
+                        face_names = list()
+                        convert_text_to_speech("Je cherche cela dans mes dossiers, laissez-moi juste le temps de vous reconnaître.", lang)
+                        while len(face_names) < 1:
+                            face_names, frame = recognize_face()
                         if len(face_names) == 2:
                             researched_name = recognize(r, m, f"Depuis les images de {face_names[0]} ? Ou bien celles de {face_names[1]} ?").upper()
                         elif len(face_names) == 1:
@@ -371,47 +387,42 @@ def main_speech_recog():
                             face_names.append('')
                         else:
                             break
+                        convert_text_to_speech(f"Ok, je cherche dans les dossiers de {researched_name}", lang)
                         for word in researched_name.split():
                             if word in (face_names[0], face_names[1]):
-                                img = folder_path +'/'+ word + '/' + search_picture_from_desc(word, speech_as_text)[0]
+                                searchResult = search_picture_from_desc(word, speech_as_text)
+                                img = folder_path +'/'+ word + '/' + searchResult[0]
                                 frame = cv2.imread(img, cv2.IMREAD_COLOR)
                                 small_frame = resize_keeping_aspect_ratio(frame, width=700)
                                 cv2.namedWindow("Photo3")
                                 cv2.moveWindow("Photo3", (screen.width - small_frame.shape[1])//2, (screen.height - small_frame.shape[0])//2 )
                                 cv2.imshow("Photo3", small_frame)
                                 cv2.waitKey(1)
+                                convert_text_to_speech(f"Voici la photo, vous m'aviez dit cela à son sujet : {searchResult[2]}", lang)
 
                                 research_completed = True
-                    elif word in facewords :
-                        main_face_recog(face_names, frame)
+                    elif word in facewords and not research_completed:
+                        convert_text_to_speech("Pas de problème, lancement de la reconnaissance faciale.", lang)
+                        main_face_recog()
+                        research_completed = True
         except sr.UnknownValueError:
             pass
         if not research_completed : 
-            convert_text_to_speech("Désolée, je n'ai pas compris.", lang, "7")
+            convert_text_to_speech("Désolée, je n'ai pas compris.", lang)
             
 
 
 if __name__ == '__main__':
-    
-    background_i = 0
     folder_path = image_directory
     process_users_encoding()
 
+    r = sr.Recognizer()
+    m = sr.Microphone(get_microphone_index(microphone_name))
+    with m as source:
+        r.adjust_for_ambient_noise(source)
+
+    threading.Thread(target=animatedBackground).start()
+
     while(True):
-        
-        img_wl = cv2.imread(f'background/{background_i}.png', cv2.IMREAD_COLOR)
-        window_name = "Robotonomie"
-        cv2.namedWindow(window_name, cv2.WND_PROP_FULLSCREEN)
-        cv2.moveWindow(window_name, screen.x - 1, screen.y - 1)
-        cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-        cv2.imshow(window_name, img_wl)
-        cv2.waitKey(1)
-
-        background_i = background_i + 1 if background_i <3 else 0
-
-        r = sr.Recognizer()
-        m = sr.Microphone(get_microphone_index(microphone_name))
-        with m as source:
-            r.adjust_for_ambient_noise(source)
 
         main_speech_recog()
