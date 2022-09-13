@@ -13,14 +13,13 @@ import screeninfo
 import speech_recognition as sr
 import threading
 
+# screen used to open the Robotonomie window
 SCREEN_ID = 0
 
 # get the directory where patients folders are stored
 IMAGE_DIRECTORY = f"{os.getcwd()}/data"
 
-#CAREFUL!!! you need to check the filepath to the images before you run the code
-
-#Reference to webcam
+# reference to webcam
 VIDEO_CAPTURE = cv2.VideoCapture(0)
 
 # get the size of the SCREEN
@@ -39,7 +38,7 @@ model = SentenceTransformer('distiluse-base-multilingual-cased-v1')
 
 
 def convertTextToSpeech(txt, LANG):
-    tts = gtts.gTTS(txt, LANG=LANG)
+    tts = gtts.gTTS(txt, lang=LANG)
     tts.save(f"gtts.mp3")
     playsound(f"gtts.mp3", True)
     os.remove(f"gtts.mp3")
@@ -55,7 +54,7 @@ def computeEncodings(pth, imagePath, personName):
     :return:
     """
     personImage = face_recognition.load_image_file(imagePath)
-    personFaceEncoding = face_recognition.faceEncodings(personImage)[0]
+    personFaceEncoding = face_recognition.face_encodings(personImage)[0]
     np.save(pth + f'{personName}_numpy.npy', personFaceEncoding)
 
 
@@ -73,8 +72,8 @@ def recognizeFace():
     # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
     rgbSmallFrame = smallFrame[:, :, ::-1]
 
-    faceLocations = face_recognition.faceLocations(rgbSmallFrame)
-    faceEncodings = face_recognition.faceEncodings(rgbSmallFrame, faceLocations)
+    faceLocations = face_recognition.face_locations(rgbSmallFrame)
+    faceEncodings = face_recognition.face_encodings(rgbSmallFrame, faceLocations)
 
     faceNames = []
     for faceEncoding in faceEncodings:
@@ -86,7 +85,7 @@ def recognizeFace():
         bestMatchIndex = np.argmin(faceDistance)
         if matches[bestMatchIndex]:
             name = knownFaceNames[bestMatchIndex]
-            print(name + " reconnu")
+            print(name + " reconnu")                                                #DEBUG
 
         faceNames.append(name)
 
@@ -264,7 +263,7 @@ def processUsersEncodings():
         if (f"{person}.npy" not in os.listdir(f"{folderPath}/{person}")):
             computeEncodings(path, gtImage, person)
         readEncodingsFromFile(path, person)
-        print(person + " processed")
+        print(person + " processed")                                            #DEBUG
 
 
 def getMicrophoneIndex(MICROPHONE_NAME):
@@ -277,9 +276,9 @@ def heyListen(r, audio):
     while True:
         if 'mainSpeechRecogThread' in threads.keys():
             threads['mainSpeechRecogThread'].start()
-            print("Waiting")
+            print("Waiting")                                                                        #DEBUG
             threads['mainSpeechRecogThread'].join()
-            print("done!")
+            print("done!")                                                                          #DEBUG
             del threads['mainSpeechRecogThread']
         with m as source:
             audio = r.listen(source, phrase_time_limit=3)
@@ -290,7 +289,7 @@ def heyListen(r, audio):
 def heyListenRecog(audio):
     try:
         speechAsText = r.recognize_google(audio, language="fr-FR")
-        print("user : " + speechAsText)
+        print("user : " + speechAsText)                                                         #DEBUG
         for wakeword in wakewords:
             if speechAsText.count(wakeword) > 0:
                 threads['mainSpeechRecogThread'] = threading.Thread(target=main_speech_recog)   
@@ -299,7 +298,7 @@ def heyListenRecog(audio):
         pass
 
     except sr.RequestError as e:
-        print("Le service Google Speech API a rencontré une erreur" + format(e))
+        print("Le service Google Speech API a rencontré une erreur" + format(e))                            #DEBUG
 
 
 def recognize(r, m, text):
@@ -307,7 +306,7 @@ def recognize(r, m, text):
     with m as source:
         audio = r.listen(source, phrase_time_limit=5)
     speechAsText = r.recognize_google(audio, language="fr-FR")
-    print("user : " + speechAsText)
+    print("user : " + speechAsText)                                                     #DEBUG
     return speechAsText
 
 
@@ -386,8 +385,7 @@ def imageSpeechResearch(speechAsText):
 
     while len(faceNames) < 1:
         faceNames, frame = recognizeFace()
-        print(faceNames)
-        print(len(faceNames))
+        print(faceNames)                                                            #DEBUG
     
     if len(faceNames) >= 2:
         researchedName = recognize(r, m, f"Depuis les images de {faceNames[0]} ? Ou bien celles de {faceNames[1]} ?").upper()
@@ -398,6 +396,7 @@ def imageSpeechResearch(speechAsText):
     convertTextToSpeech(f"Ok, je cherche dans les dossiers de {researchedName}", LANG)
     for word in researchedName.split():
         if word in (faceNames[0], faceNames[1]):
+            word = faceNames[0] if word in faceNames[0] else faceNames[1]
             searchResult = searchPictureFromDescription(word, speechAsText)
             img = folderPath +'/'+ word + '/' + searchResult[0]
             frame = cv2.imread(img, cv2.IMREAD_COLOR)
@@ -407,13 +406,14 @@ def imageSpeechResearch(speechAsText):
             cv2.imshow("Photo3", smallFrame)
             cv2.waitKey(1)
             convertTextToSpeech(f"Voici la photo, vous m'aviez dit cela à son sujet : {searchResult[2]}", LANG)
+            cv2.destroyWindow("Photo3")
 
 
 def main_speech_recog():
     researchCompleted = False
     try :
         speechAsText = recognize(r, m, "oui ?")
-        print(speechAsText)
+        print(speechAsText)                                             #DEBUG
     
         for word in killwords + keywords + facewords :
             if word in speechAsText and not researchCompleted:
