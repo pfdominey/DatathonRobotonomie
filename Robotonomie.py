@@ -269,22 +269,36 @@ def get_microphone_index(microphone_name):
             return i
 
 def hey_listen(r, audio):
-    ret = False
-    with m as source:
-        audio = r.listen(source, phrase_time_limit=3)
+    while True:
+        if 'mainSpeechRecogThread' in threads.keys():
+            threads['mainSpeechRecogThread'].start()
+            print("Waiting")
+            threads['mainSpeechRecogThread'].join()
+            print("done!")
+            del threads['mainSpeechRecogThread']
+        print("Hey Listen !")
+        with m as source:
+            audio = r.listen(source, phrase_time_limit=3)
+        
+        threading.Thread(target=heyListenRecog, args=[audio]).start()
+        print("Hey Listen Stop")
+
+def heyListenRecog(audio):
+    print("recog")
     try:
         speech_as_text = r.recognize_google(audio, language="fr-FR")
         print("user : " + speech_as_text)
         for wakeword in wakewords:
-            if wakeword in speech_as_text:
-                ret = True
-        return ret
+            if speech_as_text.count(wakeword) > 0:
+                threads['mainSpeechRecogThread'] = threading.Thread(target=main_speech_recog)   
 
     except sr.UnknownValueError:
         print("Oops! Didn't catch that")
 
     except sr.RequestError as e:
         print("Le service Google Speech API a rencontré une erreur" + format(e))
+
+    print("recog stop")
 
 def recognize(r, m, text):
     convert_text_to_speech(text, lang)
@@ -362,53 +376,54 @@ def main_face_recog():
         convert_text_to_speech(end, lang)
 
 def main_speech_recog():
+    research_completed = False
+    try :
+        speech_as_text = recognize(r, m, "oui ?")
+        print(speech_as_text)
     
-    if hey_listen(r, m) :
-        research_completed = False
-        try :
-            speech_as_text = recognize(r, m, "oui ?")
-            print(speech_as_text)
-        
-            for word in killwords + keywords + facewords:
-                if word in speech_as_text :
-                    if word in killwords : 
-                        convert_text_to_speech("Au-revoir !", lang)
-                        destroy_windows()
-                        research_completed = True
-                    elif word in keywords :
-                        face_names = list()
-                        convert_text_to_speech("Je cherche cela dans mes dossiers, laissez-moi juste le temps de vous reconnaître.", lang)
-                        while len(face_names) < 1:
-                            face_names, frame = recognize_face()
-                        if len(face_names) == 2:
-                            researched_name = recognize(r, m, f"Depuis les images de {face_names[0]} ? Ou bien celles de {face_names[1]} ?").upper()
-                        elif len(face_names) == 1:
-                            researched_name = face_names[0]
-                            face_names.append('')
-                        else:
-                            break
-                        convert_text_to_speech(f"Ok, je cherche dans les dossiers de {researched_name}", lang)
-                        for word in researched_name.split():
-                            if word in (face_names[0], face_names[1]):
-                                searchResult = search_picture_from_desc(word, speech_as_text)
-                                img = folder_path +'/'+ word + '/' + searchResult[0]
-                                frame = cv2.imread(img, cv2.IMREAD_COLOR)
-                                small_frame = resize_keeping_aspect_ratio(frame, width=700)
-                                cv2.namedWindow("Photo3")
-                                cv2.moveWindow("Photo3", (screen.width - small_frame.shape[1])//2, (screen.height - small_frame.shape[0])//2 )
-                                cv2.imshow("Photo3", small_frame)
-                                cv2.waitKey(1)
-                                convert_text_to_speech(f"Voici la photo, vous m'aviez dit cela à son sujet : {searchResult[2]}", lang)
+        for word in killwords + keywords + facewords :
+            if word in speech_as_text and not research_completed:
+                if word in killwords : 
+                    convert_text_to_speech("Au-revoir !", lang)
+                    destroy_windows()
+                    research_completed = True
+                elif word in keywords :
+                    face_names = list()
+                    convert_text_to_speech("Je cherche cela dans mes dossiers, laissez-moi juste le temps de vous reconnaître.", lang)
 
-                                research_completed = True
-                    elif word in facewords and not research_completed:
-                        convert_text_to_speech("Pas de problème, lancement de la reconnaissance faciale.", lang)
-                        main_face_recog()
-                        research_completed = True
-        except sr.UnknownValueError:
-            pass
-        if not research_completed : 
-            convert_text_to_speech("Désolée, je n'ai pas compris.", lang)
+                    while len(face_names) < 1:
+                        face_names, frame = recognize_face()
+                        print(face_names)
+                        print(len(face_names))
+                    
+                    if len(face_names) >= 2:
+                        researched_name = recognize(r, m, f"Depuis les images de {face_names[0]} ? Ou bien celles de {face_names[1]} ?").upper()
+                    elif len(face_names) == 1:
+                        researched_name = face_names[0]
+                        face_names.append('')
+
+                    convert_text_to_speech(f"Ok, je cherche dans les dossiers de {researched_name}", lang)
+                    for word in researched_name.split():
+                        if word in (face_names[0], face_names[1]):
+                            searchResult = search_picture_from_desc(word, speech_as_text)
+                            img = folder_path +'/'+ word + '/' + searchResult[0]
+                            frame = cv2.imread(img, cv2.IMREAD_COLOR)
+                            small_frame = resize_keeping_aspect_ratio(frame, width=700)
+                            cv2.namedWindow("Photo3")
+                            cv2.moveWindow("Photo3", (screen.width - small_frame.shape[1])//2, (screen.height - small_frame.shape[0])//2 )
+                            cv2.imshow("Photo3", small_frame)
+                            cv2.waitKey(1)
+                            convert_text_to_speech(f"Voici la photo, vous m'aviez dit cela à son sujet : {searchResult[2]}", lang)
+
+                            research_completed = True
+                elif word in facewords :
+                    convert_text_to_speech("Pas de problème, lancement de la reconnaissance faciale.", lang)
+                    main_face_recog()
+                    research_completed = True
+    except sr.UnknownValueError:
+        pass
+    if not research_completed : 
+        convert_text_to_speech("Désolée, je n'ai pas compris.", lang)
             
 
 
@@ -421,8 +436,8 @@ if __name__ == '__main__':
     with m as source:
         r.adjust_for_ambient_noise(source)
 
-    threading.Thread(target=animatedBackground).start()
-
-    while(True):
-
-        main_speech_recog()
+    threads = { 'animatedBackgroundThread' : threading.Thread(target=animatedBackground),
+                'heyListenThread'          : threading.Thread(target=hey_listen, args=[r,m]) }
+    
+    for thread in threads.values():
+        thread.start()
