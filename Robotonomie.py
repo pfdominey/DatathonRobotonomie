@@ -13,206 +13,206 @@ import screeninfo
 import speech_recognition as sr
 import threading
 
-screen_id = 0
-is_color = False
+SCREEN_ID = 0
 
 # get the directory where patients folders are stored
-image_directory = f"{os.getcwd()}/data"
+IMAGE_DIRECTORY = f"{os.getcwd()}/data"
 
 #CAREFUL!!! you need to check the filepath to the images before you run the code
 
 #Reference to webcam
-video_capture = cv2.VideoCapture(0)
+VIDEO_CAPTURE = cv2.VideoCapture(0)
 
-# get the size of the screen
-screen = screeninfo.get_monitors()[screen_id]
+# get the size of the SCREEN
+SCREEN = screeninfo.get_monitors()[SCREEN_ID]
 
-known_face_encodings = []
-known_face_names = []
-lang = "fr"
-microphone_name = "Microphone PC"
+knownFaceEncodings = []
+knownFaceNames = []
+LANG = "fr"
+MICROPHONE_NAME = "Microphone PC"
 wakewords = ['robot']
 keywords = ['montre', 'montrer']
 facewords = ['reconnaissance', 'faciale']
 killwords = ['revoir', 'à bientôt']
 
-def convert_text_to_speech(txt, lang):
-    tts = gtts.gTTS(txt, lang=lang)
+model = SentenceTransformer('distiluse-base-multilingual-cased-v1')
+
+
+def convertTextToSpeech(txt, LANG):
+    tts = gtts.gTTS(txt, LANG=LANG)
     tts.save(f"gtts.mp3")
     playsound(f"gtts.mp3", True)
     os.remove(f"gtts.mp3")
     print("Robotonomy : " + txt)                                                                      #DEBUG
 
 
-def compute_encodings(pth, image_path, person_name):
+def computeEncodings(pth, imagePath, personName):
     """
 
     :param pth:
     :param image_path:
-    :param person_name:
+    :param personName:
     :return:
     """
-    person_image = face_recognition.load_image_file(image_path)
-    person_face_encoding = face_recognition.face_encodings(person_image)[0]
-    np.save(pth + f'{person_name}_numpy.npy', person_face_encoding)
+    personImage = face_recognition.load_image_file(imagePath)
+    personFaceEncoding = face_recognition.faceEncodings(personImage)[0]
+    np.save(pth + f'{personName}_numpy.npy', personFaceEncoding)
 
 
-def recognize_face():
+def recognizeFace():
     """
 
     :param img:
     :return:
     """
 
-    ret, frame_or = video_capture.read()
-    frame = frame_or.copy()
-    small_frame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
+    ret, frameOr = VIDEO_CAPTURE.read()
+    frame = frameOr.copy()
+    smallFrame = cv2.resize(frame, (0, 0), fx=0.25, fy=0.25)
 
     # Convert the image from BGR color (which OpenCV uses) to RGB color (which face_recognition uses)
-    rgb_small_frame = small_frame[:, :, ::-1]
+    rgbSmallFrame = smallFrame[:, :, ::-1]
 
-    face_locations = face_recognition.face_locations(rgb_small_frame)
-    face_encodings = face_recognition.face_encodings(rgb_small_frame, face_locations)
+    faceLocations = face_recognition.faceLocations(rgbSmallFrame)
+    faceEncodings = face_recognition.faceEncodings(rgbSmallFrame, faceLocations)
 
-    face_names = []
-    for face_encoding in face_encodings:
+    faceNames = []
+    for faceEncoding in faceEncodings:
         # See if the face is a match for the known face(s)
-        matches = face_recognition.compare_faces(known_face_encodings, face_encoding)
+        matches = face_recognition.compare_faces(knownFaceEncodings, faceEncoding)
         name = "Unknown"
 
-        face_distances = face_recognition.face_distance(known_face_encodings, face_encoding)
-        best_match_index = np.argmin(face_distances)
-        if matches[best_match_index]:
-            name = known_face_names[best_match_index]
+        faceDistance = face_recognition.face_distance(knownFaceEncodings, faceEncoding)
+        bestMatchIndex = np.argmin(faceDistance)
+        if matches[bestMatchIndex]:
+            name = knownFaceNames[bestMatchIndex]
+            print(name + " reconnu")
 
-        face_names.append(name)
+        faceNames.append(name)
 
-    frame = draw_rectangle_around_face(frame, face_locations, face_names)
+    frame = drawRectangleAroundFace(frame, faceLocations, faceNames)
     
-    return face_names, frame
+    return faceNames, frame
 
 
-model = SentenceTransformer('distiluse-base-multilingual-cased-v1')
-
-
-def get_filenames():
+def getFilename():
 
     # get patients folder names
-    patient_names = os.listdir(image_directory)
+    patientNames = os.listdir(IMAGE_DIRECTORY)
 
     # set empty arrays to fill with filenames and files content
     descriptions = []
-    photo_names = []
-    photo_titles = []
+    photoNames = []
+    photoTitles = []
 
     # explore patient folders and fill arrays according to value (image, title or text)
-    for patient_name in patient_names:
-        dir_files = os.listdir(image_directory + '/' + patient_name)
-        temp_list = []
-        temp_list_photos = []
-        temp_list_titles = []
-        for dir_file in dir_files:
-            if (dir_file.split('_')[1] == "photo"):
-                if (dir_file.split('_')[3] == "text.txt"):
-                    desc = open(image_directory + '/'+ patient_name + "/" + dir_file, encoding='utf-8').read().rstrip('\n')
-                    temp_list.append(desc)
-                elif (dir_file.split('_')[3] == "image.png"):
-                    temp_list_photos.append(dir_file)
-                elif (dir_file.split('_')[3] == "title.txt"):
-                    title = open(image_directory +'/'+ patient_name + "/" + dir_file, encoding='utf-8').read().rstrip('\n')
-                    temp_list_titles.append(title)
+    for patientName in patientNames:
+        files = os.listdir(IMAGE_DIRECTORY + '/' + patientName)
+        tempList = []
+        tempListPhoto = []
+        tempListTitle = []
+        for file in files:
+            if (file.split('_')[1] == "photo"):
+                if (file.split('_')[3] == "text.txt"):
+                    desc = open(IMAGE_DIRECTORY + '/'+ patientName + "/" + file, encoding='utf-8').read().rstrip('\n')
+                    tempList.append(desc)
+                elif (file.split('_')[3] == "image.png"):
+                    tempListPhoto.append(file)
+                elif (file.split('_')[3] == "title.txt"):
+                    title = open(IMAGE_DIRECTORY +'/'+ patientName + "/" + file, encoding='utf-8').read().rstrip('\n')
+                    tempListTitle.append(title)
 
-        descriptions.append(temp_list)
-        photo_names.append(temp_list_photos)
-        photo_titles.append(temp_list_titles)
+        descriptions.append(tempList)
+        photoNames.append(tempListPhoto)
+        photoTitles.append(tempListTitle)
 
-    return (patient_names, descriptions, photo_names, photo_titles)
+    return (patientNames, descriptions, photoNames, photoTitles)
 
 
-def create_dataframe(patient_names, array_to_df):
-    df = pd.DataFrame(array_to_df).transpose()
-    df.columns = patient_names
+def createDataframe(patientNames, arrayToDf):
+    df = pd.DataFrame(arrayToDf).transpose()
+    df.columns = patientNames
     return df
 
 
-def get_similarity(patient_1, patient_2, df_texts, df_photos, df_titles):
-    embeddings_patient_1 = np.empty([df_texts[patient_1].dropna().size, 512])
-    embeddings_patient_2 = np.empty([df_texts[patient_2].dropna().size, 512])
-    for i in range(df_texts[patient_1].dropna().size):
-        sentence_embedding = model.encode(df_texts[patient_1].dropna().iloc[i], convert_to_tensor=True)
-        embeddings_patient_1[i] = sentence_embedding
+def getsimilarity(patient_1, patient_2, dfTexts, dfPhotos, dfTitles):
+    embeddingsPatient_1 = np.empty([dfTexts[patient_1].dropna().size, 512])
+    embeddingsPatient_2 = np.empty([dfTexts[patient_2].dropna().size, 512])
+    for i in range(dfTexts[patient_1].dropna().size):
+        sentenceEmbedding = model.encode(dfTexts[patient_1].dropna().iloc[i], convert_to_tensor=True)
+        embeddingsPatient_1[i] = sentenceEmbedding
 
-    for i in range(df_texts[patient_2].dropna().size):
-        sentence_embedding = model.encode(df_texts[patient_2].dropna().iloc[i], convert_to_tensor=True)
-        embeddings_patient_2[i] = sentence_embedding
+    for i in range(dfTexts[patient_2].dropna().size):
+        sentenceEmbedding = model.encode(dfTexts[patient_2].dropna().iloc[i], convert_to_tensor=True)
+        embeddingsPatient_2[i] = sentenceEmbedding
 
     # compute similarity scores of two embeddings
-    cosine_scores = util.pytorch_cos_sim(embeddings_patient_1, embeddings_patient_2)
+    cosineScore = util.pytorch_cos_sim(embeddingsPatient_1, embeddingsPatient_2)
 
-    cosine_max=cosine_scores.max().item()
+    cosineMax=cosineScore.max().item()
     index_1=-789
     index_2=-345
-    for k in range(len(cosine_scores)):
-        for j in range(len(cosine_scores[0])):
-            if (cosine_scores[k][j].item() == cosine_max):
+    for k in range(len(cosineScore)):
+        for j in range(len(cosineScore[0])):
+            if (cosineScore[k][j].item() == cosineMax):
                 index_1 = k
                 index_2 = j
 
-    photo_file1 = df_photos[patient_1].dropna().iloc[index_1]
-    photo_title1 = df_titles[patient_1].dropna().iloc[index_1]
-    photo_text1 = df_texts[patient_1].dropna().iloc[index_1]
+    photoFile_1 = dfPhotos[patient_1].dropna().iloc[index_1]
+    photoTitle_1 = dfTitles[patient_1].dropna().iloc[index_1]
+    photoText_1 = dfTexts[patient_1].dropna().iloc[index_1]
 
-    photo_file2 = df_photos[patient_2].dropna().iloc[index_2]
-    photo_title2 = df_titles[patient_2].dropna().iloc[index_2]
-    photo_text2 = df_texts[patient_2].dropna().iloc[index_2]
+    photoFile_2 = dfPhotos[patient_2].dropna().iloc[index_2]
+    photoTitle_2 = dfTitles[patient_2].dropna().iloc[index_2]
+    photoText_2 = dfTexts[patient_2].dropna().iloc[index_2]
 
     ''' return à checker pour la suite'''
-    return (photo_file1, photo_title1, photo_text1, photo_file2, photo_title2, photo_text2)
+    return (photoFile_1, photoTitle_1, photoText_1, photoFile_2, photoTitle_2, photoText_2)
 
 
-def search_picture_from_desc(patient, desc):
-    patient_names, descriptions, photo_names, photo_titles = get_filenames()
-    df_texts = create_dataframe(patient_names, descriptions)
-    df_photos = create_dataframe(patient_names, photo_names)
-    df_titles = create_dataframe(patient_names, photo_titles)
+def searchPictureFromDescription(patient, desc):
+    patientNames, descriptions, photoNames, photoTitles = getFilename()
+    dfTexts = createDataframe(patientNames, descriptions)
+    dfPhotos = createDataframe(patientNames, photoNames)
+    dfTitles = createDataframe(patientNames, photoTitles)
 
-    embeddings_patient_1 = np.empty([df_texts[patient].dropna().size, 512])
-    embedding_researched = np.empty([df_texts[patient].dropna().size, 512])
-    for i in range(df_texts[patient].dropna().size):
-        sentence_embedding = model.encode(df_texts[patient].dropna().iloc[i], convert_to_tensor=True)
-        embeddings_patient_1[i] = sentence_embedding
-        embedding_researched[i] = model.encode(desc, convert_to_tensor=True)
+    embeddingsPatient_1 = np.empty([dfTexts[patient].dropna().size, 512])
+    researchedEmbeddings = np.empty([dfTexts[patient].dropna().size, 512])
+    for i in range(dfTexts[patient].dropna().size):
+        sentenceEmbedding = model.encode(dfTexts[patient].dropna().iloc[i], convert_to_tensor=True)
+        embeddingsPatient_1[i] = sentenceEmbedding
+        researchedEmbeddings[i] = model.encode(desc, convert_to_tensor=True)
     
 
     # compute similarity scores of two embeddings
-    cosine_scores = util.pytorch_cos_sim(embeddings_patient_1, embedding_researched)
+    cosineScore = util.pytorch_cos_sim(embeddingsPatient_1, researchedEmbeddings)
 
-    cosine_max=cosine_scores.max().item()
+    cosineMax=cosineScore.max().item()
     index_1=-789
-    for k in range(len(cosine_scores)):
-        for j in range(len(cosine_scores[0])):
-            if (cosine_scores[k][j].item() == cosine_max):
+    for k in range(len(cosineScore)):
+        for j in range(len(cosineScore[0])):
+            if (cosineScore[k][j].item() == cosineMax):
                 index_1 = k
 
-    photo_file1 = df_photos[patient].dropna().iloc[index_1]
-    photo_title1 = df_titles[patient].dropna().iloc[index_1]
-    photo_text1 = df_texts[patient].dropna().iloc[index_1]
+    photoFile_1 = dfPhotos[patient].dropna().iloc[index_1]
+    photoTitle_1 = dfTitles[patient].dropna().iloc[index_1]
+    photoText_1 = dfTexts[patient].dropna().iloc[index_1]
 
     ''' return à checker pour la suite'''
-    return (photo_file1, photo_title1, photo_text1)
+    return (photoFile_1, photoTitle_1, photoText_1)
 
 
-def get_similar_files(patient_1, patient_2):
-    patient_names, descriptions, photo_names, photo_titles = get_filenames()
-    df_texts = create_dataframe(patient_names, descriptions)
-    df_photos = create_dataframe(patient_names, photo_names)
-    df_titles = create_dataframe(patient_names, photo_titles)
-    photo_file1, photo_title1, photo_text1, photo_file2, photo_title2, photo_text2 = get_similarity(patient_1, patient_2, df_texts, df_photos, df_titles)
-    return [[photo_file1, photo_title1, photo_text1], [photo_file2, photo_title2, photo_text2]]
+def getSimilarFile(patient_1, patient_2):
+    patientNames, descriptions, photoNames, photoTitles = getFilename()
+    dfTexts = createDataframe(patientNames, descriptions)
+    dfPhotos = createDataframe(patientNames, photoNames)
+    dfTitles = createDataframe(patientNames, photoTitles)
+    photoFile_1, photoTitle_1, photoText_1, photoFile_2, photoTitle_2, photoText_2 = getsimilarity(patient_1, patient_2, dfTexts, dfPhotos, dfTitles)
+    return [[photoFile_1, photoTitle_1, photoText_1], [photoFile_2, photoTitle_2, photoText_2]]
 
 
-def draw_rectangle_around_face(frame, face_locations, face_names):
-    for (top, right, bottom, left), name in zip(face_locations, face_names):
+def drawRectangleAroundFace(frame, faceLocations, faceNames):
+    for (top, right, bottom, left), name in zip(faceLocations, faceNames):
         
         cv2.rectangle(frame, (left*4, top*4), (right*4, bottom*4), (0, 255, 0), 4)
         font = cv2.FONT_HERSHEY_DUPLEX
@@ -220,19 +220,20 @@ def draw_rectangle_around_face(frame, face_locations, face_names):
     return frame
 
 
-def read_encodings_from_files(pth, person_name):
+def readEncodingsFromFile(pth, personName):
     """
 
     :param pth:
-    :param person_name:
+    :param personName:
     :return:
     """
 
-    person_face_encod = np.load(pth + f'{person_name}_numpy.npy')
-    known_face_encodings.append(person_face_encod)
-    known_face_names.append(person_name)
+    personFaceEncoding = np.load(pth + f'{personName}_numpy.npy')
+    knownFaceEncodings.append(personFaceEncoding)
+    knownFaceNames.append(personName)
 
-def resize_keeping_aspect_ratio(img, width = None, height = None):
+
+def resizeKeepingAspectRatio(img, width = None, height = None):
     dim = None
     (h, w) = img.shape[:2]
 
@@ -251,24 +252,28 @@ def resize_keeping_aspect_ratio(img, width = None, height = None):
 
     return resized
 
-def process_users_encoding():
-    persons = os.listdir(folder_path)
+
+def processUsersEncodings():
+    persons = os.listdir(folderPath)
 
     for person in persons:
-        gt_image = folder_path+"/"+person+f"/{person}_selfie.png"
-        path = folder_path+"/"+person + "/"
+        gtImage = folderPath+"/"+person+f"/{person}_selfie.png"
+        path = folderPath+"/"+person + "/"
 
         # Save encodings from a new user
-        if (f"{person}.npy" not in os.listdir(f"{folder_path}/{person}")):
-            compute_encodings(path, gt_image, person)
-        read_encodings_from_files(path, person)
+        if (f"{person}.npy" not in os.listdir(f"{folderPath}/{person}")):
+            computeEncodings(path, gtImage, person)
+        readEncodingsFromFile(path, person)
+        print(person + " processed")
 
-def get_microphone_index(microphone_name):
+
+def getMicrophoneIndex(MICROPHONE_NAME):
     for i, s in enumerate(sr.Microphone.list_microphone_names()):
-        if microphone_name in s:
+        if MICROPHONE_NAME in s:
             return i
 
-def hey_listen(r, audio):
+
+def heyListen(r, audio):
     while True:
         if 'mainSpeechRecogThread' in threads.keys():
             threads['mainSpeechRecogThread'].start()
@@ -276,52 +281,51 @@ def hey_listen(r, audio):
             threads['mainSpeechRecogThread'].join()
             print("done!")
             del threads['mainSpeechRecogThread']
-        print("Hey Listen !")
         with m as source:
             audio = r.listen(source, phrase_time_limit=3)
         
         threading.Thread(target=heyListenRecog, args=[audio]).start()
-        print("Hey Listen Stop")
+
 
 def heyListenRecog(audio):
-    print("recog")
     try:
-        speech_as_text = r.recognize_google(audio, language="fr-FR")
-        print("user : " + speech_as_text)
+        speechAsText = r.recognize_google(audio, language="fr-FR")
+        print("user : " + speechAsText)
         for wakeword in wakewords:
-            if speech_as_text.count(wakeword) > 0:
+            if speechAsText.count(wakeword) > 0:
                 threads['mainSpeechRecogThread'] = threading.Thread(target=main_speech_recog)   
 
     except sr.UnknownValueError:
-        print("Oops! Didn't catch that")
+        pass
 
     except sr.RequestError as e:
         print("Le service Google Speech API a rencontré une erreur" + format(e))
 
-    print("recog stop")
 
 def recognize(r, m, text):
-    convert_text_to_speech(text, lang)
+    convertTextToSpeech(text, LANG)
     with m as source:
         audio = r.listen(source, phrase_time_limit=5)
-    speech_as_text = r.recognize_google(audio, language="fr-FR")
-    print("user : " + speech_as_text)
-    return speech_as_text
+    speechAsText = r.recognize_google(audio, language="fr-FR")
+    print("user : " + speechAsText)
+    return speechAsText
+
 
 def animatedBackground():
     background_i = 0
     while True:
-        img_wl = cv2.imread(f'background/{background_i}.png', cv2.IMREAD_COLOR)
-        window_name = "Robotonomie"
-        cv2.namedWindow(window_name, cv2.WND_PROP_FULLSCREEN)
-        cv2.moveWindow(window_name, screen.x - 1, screen.y - 1)
-        cv2.setWindowProperty(window_name, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-        cv2.imshow(window_name, img_wl)
+        img = cv2.imread(f'background/{background_i}.png', cv2.IMREAD_COLOR)
+        windowName = "Robotonomie"
+        cv2.namedWindow(windowName, cv2.WND_PROP_FULLSCREEN)
+        cv2.moveWindow(windowName, SCREEN.x - 1, SCREEN.y - 1)
+        cv2.setWindowProperty(windowName, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
+        cv2.imshow(windowName, img)
         cv2.waitKey(1000)
 
         background_i = background_i + 1 if background_i <3 else 0
 
-def destroy_windows():
+
+def destroyWindows():
     windows = ("Camera", "Photo1", "Photo2", "Photo3")
     for window in windows:
         try:
@@ -329,115 +333,122 @@ def destroy_windows():
         except:
             pass
 
-def main_face_recog():
-    face_names, frame = recognize_face()
 
-    if len(face_names) == 2:
+def mainFaceRecog():
+    faceNames, frame = recognizeFace()
 
-        small_frame = resize_keeping_aspect_ratio(frame, width=500)
+    if len(faceNames) == 2:
+
+        smallFrame = resizeKeepingAspectRatio(frame, width=500)
         cv2.namedWindow("Camera")
-        cv2.moveWindow("Camera", (screen.width - small_frame.shape[1])//2, 10)
-        cv2.imshow("Camera", small_frame)
+        cv2.moveWindow("Camera", (SCREEN.width - smallFrame.shape[1])//2, 10)
+        cv2.imshow("Camera", smallFrame)
         cv2.waitKey(1)
 
-        text = f"Ravie de vous revoir, {face_names[0]} et {face_names[1]} "
-        convert_text_to_speech(text, lang)
+        convertTextToSpeech(f"Ravie de vous revoir, {faceNames[0]} et {faceNames[1]}", LANG)
 
-        similarite = get_similar_files(face_names[0], face_names[1])
+        similarite = getSimilarFile(faceNames[0], faceNames[1])
 
+        convertTextToSpeech("Je vais vous montrer deux images similaires parmis celles que vous m'aviez données, une image chacun.")
         for i in range(2):
-            # Photo
-            place_img = folder_path +'/'+ face_names[i] + '/' + similarite[i][0]
-            frame2 = cv2.imread(place_img, cv2.IMREAD_COLOR)
-            small_frame2 = resize_keeping_aspect_ratio(frame2, width=700)
+            convertTextToSpeech(f"Voyons l'image de {faceNames[i]}")
 
-            Place = f"Photo{i+1}"
-            cv2.namedWindow(Place)
-            cv2.moveWindow(Place, (i*(screen.width - small_frame2.shape[1])) + 10 - 20 * i, screen.height - small_frame2.shape[0] - 30)
-            cv2.imshow(Place, small_frame2)
+            # Photo
+            placeImg = folderPath +'/'+ faceNames[i] + '/' + similarite[i][0]
+            frame_2 = cv2.imread(placeImg, cv2.IMREAD_COLOR)
+            smallFrame_2 = resizeKeepingAspectRatio(frame_2, width=700)
+
+            place = f"Photo{i+1}"
+            cv2.namedWindow(place)
+            cv2.moveWindow(place, (i*(SCREEN.width - smallFrame_2.shape[1])) + 10 - 20 * i, SCREEN.height - smallFrame_2.shape[0] - 30)
+            cv2.imshow(place, smallFrame_2)
             cv2.waitKey(1)
 
             # Title
-            title_img = similarite[i][1]
-            title_txt_dialog = f"{face_names[i]}, vous souvenez-vous de cette image ? Elle est intitulée : {title_img}"
-            convert_text_to_speech(title_txt_dialog, lang)
+            imgTitle = similarite[i][1]
+            convertTextToSpeech(f"{faceNames[i]}, vous souvenez-vous de cette image ? Elle est intitulée : {imgTitle}", LANG)
 
             # Text
-            text_img = similarite[i][2]
-            text_img_dialog = f"Je peux vous rappeler ce que vous m'aviez dit à son sujet"
-            convert_text_to_speech(text_img_dialog, lang)
-            text_img_dialog2 = f"Vous m'aviez dit : {text_img}"
-            convert_text_to_speech(text_img_dialog2, lang)
+            imgText = similarite[i][2]
+            convertTextToSpeech("Je peux vous rappeler ce que vous m'aviez dit à son sujet", LANG)
+            convertTextToSpeech(f"Vous m'aviez dit : {imgText}", LANG)
 
-        end = f"{face_names[0]}, et {face_names[1]}, J'ai remarqué que vous aviez des intérêts communs, vous pouvez " \
+        end = f"{faceNames[0]}, et {faceNames[1]}, J'ai remarqué que vous aviez des intérêts communs, vous pouvez " \
             "discuter et partager ces intérêts l'un avec l'autre, pendant ce temps, je peux vous montrer d'autres photos. " \
             "Si vous me dites : Robot, montre-moi une photo de vélo, je vous montrerais une photo de vélo parmis vos photos. " \
             "Quand vous aurez fini, dites simplement Robot, au revoir ! "
-        convert_text_to_speech(end, lang)
+        convertTextToSpeech(end, LANG)
+
+
+def imageSpeechResearch(speechAsText):
+    faceNames = list()
+    convertTextToSpeech("Je cherche cela dans mes dossiers, laissez-moi juste le temps de vous reconnaître.", LANG)
+
+    while len(faceNames) < 1:
+        faceNames, frame = recognizeFace()
+        print(faceNames)
+        print(len(faceNames))
+    
+    if len(faceNames) >= 2:
+        researchedName = recognize(r, m, f"Depuis les images de {faceNames[0]} ? Ou bien celles de {faceNames[1]} ?").upper()
+    elif len(faceNames) == 1:
+        researchedName = faceNames[0]
+        faceNames.append('')
+
+    convertTextToSpeech(f"Ok, je cherche dans les dossiers de {researchedName}", LANG)
+    for word in researchedName.split():
+        if word in (faceNames[0], faceNames[1]):
+            searchResult = searchPictureFromDescription(word, speechAsText)
+            img = folderPath +'/'+ word + '/' + searchResult[0]
+            frame = cv2.imread(img, cv2.IMREAD_COLOR)
+            smallFrame = resizeKeepingAspectRatio(frame, width=700)
+            cv2.namedWindow("Photo3")
+            cv2.moveWindow("Photo3", (SCREEN.width - smallFrame.shape[1])//2, (SCREEN.height - smallFrame.shape[0])//2 )
+            cv2.imshow("Photo3", smallFrame)
+            cv2.waitKey(1)
+            convertTextToSpeech(f"Voici la photo, vous m'aviez dit cela à son sujet : {searchResult[2]}", LANG)
+
 
 def main_speech_recog():
-    research_completed = False
+    researchCompleted = False
     try :
-        speech_as_text = recognize(r, m, "oui ?")
-        print(speech_as_text)
+        speechAsText = recognize(r, m, "oui ?")
+        print(speechAsText)
     
         for word in killwords + keywords + facewords :
-            if word in speech_as_text and not research_completed:
+            if word in speechAsText and not researchCompleted:
                 if word in killwords : 
-                    convert_text_to_speech("Au-revoir !", lang)
-                    destroy_windows()
-                    research_completed = True
+                    convertTextToSpeech("Au-revoir !", LANG)
+                    destroyWindows()
+                    researchCompleted = True
+
                 elif word in keywords :
-                    face_names = list()
-                    convert_text_to_speech("Je cherche cela dans mes dossiers, laissez-moi juste le temps de vous reconnaître.", lang)
+                    imageSpeechResearch(speechAsText)
+                    researchCompleted = True
 
-                    while len(face_names) < 1:
-                        face_names, frame = recognize_face()
-                        print(face_names)
-                        print(len(face_names))
-                    
-                    if len(face_names) >= 2:
-                        researched_name = recognize(r, m, f"Depuis les images de {face_names[0]} ? Ou bien celles de {face_names[1]} ?").upper()
-                    elif len(face_names) == 1:
-                        researched_name = face_names[0]
-                        face_names.append('')
-
-                    convert_text_to_speech(f"Ok, je cherche dans les dossiers de {researched_name}", lang)
-                    for word in researched_name.split():
-                        if word in (face_names[0], face_names[1]):
-                            searchResult = search_picture_from_desc(word, speech_as_text)
-                            img = folder_path +'/'+ word + '/' + searchResult[0]
-                            frame = cv2.imread(img, cv2.IMREAD_COLOR)
-                            small_frame = resize_keeping_aspect_ratio(frame, width=700)
-                            cv2.namedWindow("Photo3")
-                            cv2.moveWindow("Photo3", (screen.width - small_frame.shape[1])//2, (screen.height - small_frame.shape[0])//2 )
-                            cv2.imshow("Photo3", small_frame)
-                            cv2.waitKey(1)
-                            convert_text_to_speech(f"Voici la photo, vous m'aviez dit cela à son sujet : {searchResult[2]}", lang)
-
-                            research_completed = True
                 elif word in facewords :
-                    convert_text_to_speech("Pas de problème, lancement de la reconnaissance faciale.", lang)
-                    main_face_recog()
-                    research_completed = True
+                    convertTextToSpeech("Pas de problème, lancement de la reconnaissance faciale.", LANG)
+                    destroyWindows()
+                    mainFaceRecog()
+                    researchCompleted = True
     except sr.UnknownValueError:
         pass
-    if not research_completed : 
-        convert_text_to_speech("Désolée, je n'ai pas compris.", lang)
+    if not researchCompleted : 
+        convertTextToSpeech("Désolée, je n'ai pas compris.", LANG)
             
 
 
 if __name__ == '__main__':
-    folder_path = image_directory
-    process_users_encoding()
+    folderPath = IMAGE_DIRECTORY
+    processUsersEncodings()
 
     r = sr.Recognizer()
-    m = sr.Microphone(get_microphone_index(microphone_name))
+    m = sr.Microphone(getMicrophoneIndex(MICROPHONE_NAME))
     with m as source:
         r.adjust_for_ambient_noise(source)
 
     threads = { 'animatedBackgroundThread' : threading.Thread(target=animatedBackground),
-                'heyListenThread'          : threading.Thread(target=hey_listen, args=[r,m]) }
+                'heyListenThread'          : threading.Thread(target=heyListen, args=[r,m]) }
     
     for thread in threads.values():
         thread.start()
