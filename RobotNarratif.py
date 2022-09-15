@@ -38,11 +38,11 @@ model = SentenceTransformer('distiluse-base-multilingual-cased-v1')
 
 
 def convertTextToSpeech(txt, LANG):
+    print("Robotonomy : " + txt)                                                                      #DEBUG
     tts = gtts.gTTS(txt, lang=LANG)
     tts.save(f"gtts.mp3")
     playsound(f"gtts.mp3", True)
     os.remove(f"gtts.mp3")
-    print("Robotonomy : " + txt)                                                                      #DEBUG
 
 
 def computeEncodings(pth, imagePath, personName):
@@ -89,7 +89,8 @@ def recognizeFace():
 
         faceNames.append(name)
 
-    frame = drawRectangleAroundFace(frame, faceLocations, faceNames)
+    if len(faceNames) > 0:
+        frame = drawRectangleAroundFace(frame, faceLocations, faceNames)
     
     return faceNames, frame
 
@@ -295,10 +296,9 @@ def heyListenRecog(audio):
                 threads['mainSpeechRecogThread'] = threading.Thread(target=main_speech_recog)   
 
     except sr.UnknownValueError:
-        pass
-
+        print("user : ...")
     except sr.RequestError as e:
-        print("Le service Google Speech API a rencontré une erreur" + format(e))                            #DEBUG
+        print("Le service Google Speech API a rencontré une erreur " + format(e))                            #DEBUG
 
 
 def recognize(r, m, text):
@@ -334,58 +334,62 @@ def destroyWindows():
 
 
 def mainFaceRecog():
-    faceNames, frame = recognizeFace()
+    faceNames = list()
 
-    if len(faceNames) == 2:
+    while len(faceNames) < 2:
+        faceNames, frame = recognizeFace()
+        print(faceNames)
 
-        smallFrame = resizeKeepingAspectRatio(frame, width=500)
-        cv2.namedWindow("Camera")
-        cv2.moveWindow("Camera", (SCREEN.width - smallFrame.shape[1])//2, 10)
-        cv2.imshow("Camera", smallFrame)
+    smallFrame = resizeKeepingAspectRatio(frame, width=500)
+    cv2.namedWindow("Camera")
+    cv2.moveWindow("Camera", (SCREEN.width - smallFrame.shape[1])//2, 10)
+    cv2.imshow("Camera", smallFrame)
+    cv2.waitKey(1)
+
+    convertTextToSpeech(f"Ravie de vous revoir, {faceNames[0]} et {faceNames[1]}", LANG)
+
+    similarite = getSimilarFile(faceNames[0], faceNames[1])
+
+    convertTextToSpeech("Je vais vous montrer deux images similaires parmis celles que vous m'aviez données, une image chacun.", LANG)
+    for i in range(2):
+        convertTextToSpeech(f"Voyons l'image de {faceNames[i]}", LANG)
+
+        # Photo
+        placeImg = folderPath +'/'+ faceNames[i] + '/' + similarite[i][0]
+        frame_2 = cv2.imread(placeImg, cv2.IMREAD_COLOR)
+        smallFrame_2 = resizeKeepingAspectRatio(frame_2, width=700)
+
+        place = f"Photo{i+1}"
+        cv2.namedWindow(place)
+        cv2.moveWindow(place, (i*(SCREEN.width - smallFrame_2.shape[1])) + 10 - 20 * i, SCREEN.height - smallFrame_2.shape[0] - 30)
+        cv2.imshow(place, smallFrame_2)
         cv2.waitKey(1)
 
-        convertTextToSpeech(f"Ravie de vous revoir, {faceNames[0]} et {faceNames[1]}", LANG)
+        # Title
+        imgTitle = similarite[i][1]
+        convertTextToSpeech(f"{faceNames[i]}, vous souvenez-vous de cette image ? Elle est intitulée : {imgTitle}", LANG)
 
-        similarite = getSimilarFile(faceNames[0], faceNames[1])
+        # Text
+        imgText = similarite[i][2]
+        convertTextToSpeech("Je peux vous rappeler ce que vous m'aviez dit à son sujet", LANG)
+        convertTextToSpeech(f"Vous m'aviez dit : {imgText}", LANG)
 
-        convertTextToSpeech("Je vais vous montrer deux images similaires parmis celles que vous m'aviez données, une image chacun.")
-        for i in range(2):
-            convertTextToSpeech(f"Voyons l'image de {faceNames[i]}")
-
-            # Photo
-            placeImg = folderPath +'/'+ faceNames[i] + '/' + similarite[i][0]
-            frame_2 = cv2.imread(placeImg, cv2.IMREAD_COLOR)
-            smallFrame_2 = resizeKeepingAspectRatio(frame_2, width=700)
-
-            place = f"Photo{i+1}"
-            cv2.namedWindow(place)
-            cv2.moveWindow(place, (i*(SCREEN.width - smallFrame_2.shape[1])) + 10 - 20 * i, SCREEN.height - smallFrame_2.shape[0] - 30)
-            cv2.imshow(place, smallFrame_2)
-            cv2.waitKey(1)
-
-            # Title
-            imgTitle = similarite[i][1]
-            convertTextToSpeech(f"{faceNames[i]}, vous souvenez-vous de cette image ? Elle est intitulée : {imgTitle}", LANG)
-
-            # Text
-            imgText = similarite[i][2]
-            convertTextToSpeech("Je peux vous rappeler ce que vous m'aviez dit à son sujet", LANG)
-            convertTextToSpeech(f"Vous m'aviez dit : {imgText}", LANG)
-
-        end = f"{faceNames[0]}, et {faceNames[1]}, J'ai remarqué que vous aviez des intérêts communs, vous pouvez " \
-            "discuter et partager ces intérêts l'un avec l'autre, pendant ce temps, je peux vous montrer d'autres photos. " \
-            "Si vous me dites : Robot, montre-moi une photo de vélo, je vous montrerais une photo de vélo parmis vos photos. " \
-            "Quand vous aurez fini, dites simplement Robot, au revoir ! "
-        convertTextToSpeech(end, LANG)
+    end = f"{faceNames[0]}, et {faceNames[1]}, J'ai remarqué que vous aviez des intérêts communs, vous pouvez " \
+        "discuter et partager ces intérêts l'un avec l'autre, pendant ce temps, je peux vous montrer d'autres photos. " \
+        "Si vous me dites : Robot, montre-moi une photo de vélo, je vous montrerais une photo de vélo parmis vos photos. " \
+        "Quand vous aurez fini, dites simplement Robot, au revoir ! "
+    convertTextToSpeech(end, LANG)
 
 
 def imageSpeechResearch(speechAsText):
     faceNames = list()
+
     convertTextToSpeech("Je cherche cela dans mes dossiers, laissez-moi juste le temps de vous reconnaître.", LANG)
 
     while len(faceNames) < 1:
         faceNames, frame = recognizeFace()
-        print(faceNames)                                                            #DEBUG
+        print(faceNames)                                                               #DEBUG
+        print(len(faceNames))
     
     if len(faceNames) >= 2:
         researchedName = recognize(r, m, f"Depuis les images de {faceNames[0]} ? Ou bien celles de {faceNames[1]} ?").upper()
@@ -431,6 +435,7 @@ def main_speech_recog():
                     destroyWindows()
                     mainFaceRecog()
                     researchCompleted = True
+
     except sr.UnknownValueError:
         pass
     if not researchCompleted : 
