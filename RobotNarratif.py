@@ -32,7 +32,6 @@ MICROPHONE_NAME = "Microphone PC"
 wakewords = ['robot']
 keywords = ['montre', 'montrer']
 facewords = ['reconnaissance', 'faciale']
-killwords = ['revoir', 'à bientôt']
 
 model = SentenceTransformer('distiluse-base-multilingual-cased-v1')
 
@@ -293,7 +292,7 @@ def heyListenRecog(audio):
         print("user : " + speechAsText)                                                         #DEBUG
         for wakeword in wakewords:
             if speechAsText.count(wakeword) > 0:
-                threads['mainSpeechRecogThread'] = threading.Thread(target=main_speech_recog)   
+                threads['mainSpeechRecogThread'] = threading.Thread(target=main_speech_recog, args=[True])   
 
     except sr.UnknownValueError:
         print("user : ...")
@@ -376,8 +375,7 @@ def mainFaceRecog():
 
     end = f"{faceNames[0]}, et {faceNames[1]}, J'ai remarqué que vous aviez des intérêts communs, vous pouvez " \
         "discuter et partager ces intérêts l'un avec l'autre, pendant ce temps, je peux vous montrer d'autres photos. " \
-        "Si vous me dites : Robot, montre-moi une photo de vélo, je vous montrerais une photo de vélo parmis vos photos. " \
-        "Quand vous aurez fini, dites simplement Robot, au revoir ! "
+        "Si vous me dites : Robot, montre-moi une photo de vélo, je vous montrerais une photo de vélo parmis vos photos. "
     convertTextToSpeech(end, LANG)
 
 
@@ -410,23 +408,21 @@ def imageSpeechResearch(speechAsText):
             cv2.imshow("Photo3", smallFrame)
             cv2.waitKey(1)
             convertTextToSpeech(f"Voici la photo, vous m'aviez dit cela à son sujet : {searchResult[2]}", LANG)
-            cv2.destroyWindow("Photo3")
 
 
-def main_speech_recog():
+def main_speech_recog(newChance):
     researchCompleted = False
     try :
         speechAsText = recognize(r, m, "oui ?")
         print(speechAsText)                                             #DEBUG
     
-        for word in killwords + keywords + facewords :
+        for word in keywords + facewords :
             if word in speechAsText and not researchCompleted:
-                if word in killwords : 
-                    convertTextToSpeech("Au-revoir !", LANG)
-                    destroyWindows()
-                    researchCompleted = True
-
-                elif word in keywords :
+                if word in keywords :
+                    try:
+                        cv2.destroyWindow("Photo3")
+                    except:
+                        pass
                     imageSpeechResearch(speechAsText)
                     researchCompleted = True
 
@@ -440,17 +436,21 @@ def main_speech_recog():
         pass
     if not researchCompleted : 
         convertTextToSpeech("Désolée, je n'ai pas compris.", LANG)
+        if newChance:
+            main_speech_recog(False)
             
 
 
 if __name__ == '__main__':
     folderPath = IMAGE_DIRECTORY
     processUsersEncodings()
+    recognizeFace()
 
     r = sr.Recognizer()
     m = sr.Microphone(getMicrophoneIndex(MICROPHONE_NAME))
     with m as source:
         r.adjust_for_ambient_noise(source)
+        
 
     threads = { 'animatedBackgroundThread' : threading.Thread(target=animatedBackground),
                 'heyListenThread'          : threading.Thread(target=heyListen, args=[r,m]) }
