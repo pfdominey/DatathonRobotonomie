@@ -30,8 +30,7 @@ class MainWindow(QWidget):
     def __init__(self):
         super().__init__()
 
-
-        self.setWindowTitle("Robotonomie Data Collection")
+        self.setWindowTitle("Robot Narratif Data Collection")
         self.setFixedSize(600, 660)
 
         self.listePatients = QListWidget(self)

@@ -12,6 +12,10 @@ from sentence_transformers import SentenceTransformer, util
 import screeninfo
 import speech_recognition as sr
 import threading
+import sys
+from PyQt5.QtCore import Qt
+from PyQt5.QtWidgets import QListWidget, QLabel, QLineEdit, QPushButton, QPlainTextEdit, QWidget, QFileDialog, QListWidgetItem, QMessageBox, QApplication
+from PyQt5.QtGui import QPixmap, QImage
 
 # screen used to open the Robotonomie window
 SCREEN_ID = 0
@@ -32,21 +36,27 @@ MICROPHONE_NAME = "Microphone PC"
 wakewords = ['robot']
 keywords = ['montre', 'montrer']
 facewords = ['reconnaissance', 'faciale']
+killwords = ['au revoir', 'bientot']
 
 model = SentenceTransformer('distiluse-base-multilingual-cased-v1')
 
 
-def convertTextToSpeech(txt, LANG):
-    print("Robotonomy : " + txt)                                                                      #DEBUG
-    tts = gtts.gTTS(txt, lang=LANG)
-    tts.save(f"gtts.mp3")
-    playsound(f"gtts.mp3", True)
-    os.remove(f"gtts.mp3")
+def processUsersEncodings():
+    persons = os.listdir(folderPath)
+
+    for person in persons:
+        gtImage = folderPath+"/"+person+f"/{person}_selfie.png"
+        path = folderPath+"/"+person + "/"
+
+        # Save encodings from a new user
+        if (f"{person}.npy" not in os.listdir(f"{folderPath}/{person}")):
+            computeEncodings(path, gtImage, person)
+        readEncodingsFromFile(path, person)
+        print(person + " processed")                                            #DEBUG
 
 
 def computeEncodings(pth, imagePath, personName):
     """
-
     :param pth:
     :param image_path:
     :param personName:
@@ -59,7 +69,6 @@ def computeEncodings(pth, imagePath, personName):
 
 def recognizeFace():
     """
-
     :param img:
     :return:
     """
@@ -92,6 +101,14 @@ def recognizeFace():
         frame = drawRectangleAroundFace(frame, faceLocations, faceNames)
     
     return faceNames, frame
+
+
+def convertTextToSpeech(txt, LANG):
+    print("Robotonomy : " + txt)                                                                      #DEBUG
+    tts = gtts.gTTS(txt, lang=LANG)
+    tts.save(f"gtts.mp3")
+    playsound(f"gtts.mp3", True)
+    os.remove(f"gtts.mp3")
 
 
 def getFilename():
@@ -129,9 +146,9 @@ def getFilename():
 
 
 def createDataframe(patientNames, arrayToDf):
-    df = pd.DataFrame(arrayToDf).transpose()
-    df.columns = patientNames
-    return df
+        df = pd.DataFrame(arrayToDf).transpose()
+        df.columns = patientNames
+        return df
 
 
 def getsimilarity(patient_1, patient_2, dfTexts, dfPhotos, dfTitles):
@@ -232,38 +249,19 @@ def readEncodingsFromFile(pth, personName):
     knownFaceNames.append(personName)
 
 
-def resizeKeepingAspectRatio(img, width = None, height = None):
-    dim = None
-    (h, w) = img.shape[:2]
-
-    if width is None and height is None:
-        return img
+def resizeKeepingAspectRatio(label, img, width = None, height = None):
+    (h, w) = (img.height(), img.width())
 
     if width is None:
         r = height / float(h)
-        dim = (int(w * r), height)
+        width = int(w * r)
 
     else:
         r = width / float(w)
-        dim = (width, int(h * r))
+        height = int(h * r)
 
-    resized = cv2.resize(img, dim)
-
-    return resized
-
-
-def processUsersEncodings():
-    persons = os.listdir(folderPath)
-
-    for person in persons:
-        gtImage = folderPath+"/"+person+f"/{person}_selfie.png"
-        path = folderPath+"/"+person + "/"
-
-        # Save encodings from a new user
-        if (f"{person}.npy" not in os.listdir(f"{folderPath}/{person}")):
-            computeEncodings(path, gtImage, person)
-        readEncodingsFromFile(path, person)
-        print(person + " processed")                                            #DEBUG
+    label.resize(width, height)
+    return (width, height)
 
 
 def getMicrophoneIndex(MICROPHONE_NAME):
@@ -272,173 +270,197 @@ def getMicrophoneIndex(MICROPHONE_NAME):
             return i
 
 
-def heyListen(r, audio):
-    while True:
-        if 'mainSpeechRecogThread' in threads.keys():
-            threads['mainSpeechRecogThread'].start()
-            print("Waiting")                                                                        #DEBUG
-            threads['mainSpeechRecogThread'].join()
-            print("done!")                                                                          #DEBUG
-            del threads['mainSpeechRecogThread']
-        with m as source:
-            audio = r.listen(source, phrase_time_limit=3)
-        
-        threading.Thread(target=heyListenRecog, args=[audio]).start()
+class MainWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle("Robot Narratif")
+        self.setFixedSize(SCREEN.height, SCREEN.width)
+
+        backImg = QPixmap(f'{os.getcwd()}/background/2.png')
+        self.background = QLabel(self)
+        self.background.setPixmap(backImg)
+        resizeKeepingAspectRatio(self.background, backImg, height=SCREEN.height, width=SCREEN.width)
+        self.background.move(0, 0)
+        self.background.setScaledContents(True)
+
+        self.camera = QLabel(self)
+        self.photo1 = QLabel(self)
+        self.photo2 = QLabel(self)
+        self.photo3 = QLabel(self)
+
+        self.threads = { 'heyListenThread' : threading.Thread(target=self.heyListen, args=[r,m]) }
+    
+        for thread in self.threads.values():
+            thread.start()
 
 
-def heyListenRecog(audio):
-    try:
-        speechAsText = r.recognize_google(audio, language="fr-FR")
-        print("user : " + speechAsText)                                                         #DEBUG
-        for wakeword in wakewords:
-            if speechAsText.count(wakeword) > 0:
-                threads['mainSpeechRecogThread'] = threading.Thread(target=main_speech_recog, args=[True])   
-
-    except sr.UnknownValueError:
-        print("user : ...")
-    except sr.RequestError as e:
-        print("Le service Google Speech API a rencontré une erreur " + format(e))                            #DEBUG
-
-
-def recognize(r, m, text):
-    convertTextToSpeech(text, LANG)
-    with m as source:
-        audio = r.listen(source, phrase_time_limit=5)
-    speechAsText = r.recognize_google(audio, language="fr-FR")
-    print("user : " + speechAsText)                                                     #DEBUG
-    return speechAsText
-
-
-def animatedBackground():
-    background_i = 0
-    while True:
-        img = cv2.imread(f'background/{background_i}.png', cv2.IMREAD_COLOR)
-        windowName = "Robotonomie"
-        cv2.namedWindow(windowName, cv2.WND_PROP_FULLSCREEN)
-        cv2.moveWindow(windowName, SCREEN.x - 1, SCREEN.y - 1)
-        cv2.setWindowProperty(windowName, cv2.WND_PROP_FULLSCREEN, cv2.WINDOW_FULLSCREEN)
-        cv2.imshow(windowName, img)
-        cv2.waitKey(1000)
-
-        background_i = background_i + 1 if background_i <3 else 0
-
-
-def destroyWindows():
-    windows = ("Camera", "Photo1", "Photo2", "Photo3")
-    for window in windows:
+    def heyListenRecog(self, audio):
         try:
-            cv2.destroyWindow(window)
-        except:
-            pass
+            speechAsText = r.recognize_google(audio, language="fr-FR")
+            print("user : " + speechAsText)                                                         #DEBUG
+            for wakeword in wakewords:
+                if speechAsText.count(wakeword) > 0:
+                    self.threads['mainSpeechRecogThread'] = threading.Thread(target=self.main_speech_recog, args=[True])   
+
+        except sr.UnknownValueError:
+            print("user : ...")
+        except sr.RequestError as e:
+            print("Le service Google Speech API a rencontré une erreur " + format(e))                            #DEBUG
 
 
-def mainFaceRecog():
-    faceNames = list()
-
-    while len(faceNames) < 2:
-        faceNames, frame = recognizeFace()
-        print(faceNames)
-
-    smallFrame = resizeKeepingAspectRatio(frame, width=500)
-    cv2.namedWindow("Camera")
-    cv2.moveWindow("Camera", (SCREEN.width - smallFrame.shape[1])//2, 10)
-    cv2.imshow("Camera", smallFrame)
-    cv2.waitKey(1)
-
-    convertTextToSpeech(f"Ravie de vous revoir, {faceNames[0]} et {faceNames[1]}", LANG)
-
-    similarite = getSimilarFile(faceNames[0], faceNames[1])
-
-    convertTextToSpeech("Je vais vous montrer deux images similaires parmis celles que vous m'aviez données, une image chacun.", LANG)
-    for i in range(2):
-        convertTextToSpeech(f"Voyons l'image de {faceNames[i]}", LANG)
-
-        # Photo
-        placeImg = folderPath +'/'+ faceNames[i] + '/' + similarite[i][0]
-        frame_2 = cv2.imread(placeImg, cv2.IMREAD_COLOR)
-        smallFrame_2 = resizeKeepingAspectRatio(frame_2, width=700)
-
-        place = f"Photo{i+1}"
-        cv2.namedWindow(place)
-        cv2.moveWindow(place, (i*(SCREEN.width - smallFrame_2.shape[1])) + 10 - 20 * i, SCREEN.height - smallFrame_2.shape[0] - 30)
-        cv2.imshow(place, smallFrame_2)
-        cv2.waitKey(1)
-
-        # Title
-        imgTitle = similarite[i][1]
-        convertTextToSpeech(f"{faceNames[i]}, vous souvenez-vous de cette image ? Elle est intitulée : {imgTitle}", LANG)
-
-        # Text
-        imgText = similarite[i][2]
-        convertTextToSpeech("Je peux vous rappeler ce que vous m'aviez dit à son sujet", LANG)
-        convertTextToSpeech(f"Vous m'aviez dit : {imgText}", LANG)
-
-    end = f"{faceNames[0]}, et {faceNames[1]}, J'ai remarqué que vous aviez des intérêts communs, vous pouvez " \
-        "discuter et partager ces intérêts l'un avec l'autre, pendant ce temps, je peux vous montrer d'autres photos. " \
-        "Si vous me dites : Robot, montre-moi une photo de vélo, je vous montrerais une photo de vélo parmis vos photos. "
-    convertTextToSpeech(end, LANG)
+    def recognize(self, r, m, text):
+        convertTextToSpeech(text, LANG)
+        with m as source:
+            audio = r.listen(source, phrase_time_limit=5)
+        speechAsText = r.recognize_google(audio, language="fr-FR")
+        print("user : " + speechAsText)                                                     #DEBUG
+        return speechAsText
 
 
-def imageSpeechResearch(speechAsText):
-    faceNames = list()
-
-    convertTextToSpeech("Je cherche cela dans mes dossiers, laissez-moi juste le temps de vous reconnaître.", LANG)
-
-    while len(faceNames) < 1:
-        faceNames, frame = recognizeFace()
-        print(faceNames)                                                               #DEBUG
-        print(len(faceNames))
-    
-    if len(faceNames) >= 2:
-        researchedName = recognize(r, m, f"Depuis les images de {faceNames[0]} ? Ou bien celles de {faceNames[1]} ?").upper()
-    elif len(faceNames) == 1:
-        researchedName = faceNames[0]
-        faceNames.append('')
-
-    convertTextToSpeech(f"Ok, je cherche dans les dossiers de {researchedName}", LANG)
-    for word in researchedName.split():
-        if word in (faceNames[0], faceNames[1]):
-            word = faceNames[0] if word in faceNames[0] else faceNames[1]
-            searchResult = searchPictureFromDescription(word, speechAsText)
-            img = folderPath +'/'+ word + '/' + searchResult[0]
-            frame = cv2.imread(img, cv2.IMREAD_COLOR)
-            smallFrame = resizeKeepingAspectRatio(frame, width=700)
-            cv2.namedWindow("Photo3")
-            cv2.moveWindow("Photo3", (SCREEN.width - smallFrame.shape[1])//2, (SCREEN.height - smallFrame.shape[0])//2 )
-            cv2.imshow("Photo3", smallFrame)
-            cv2.waitKey(1)
-            convertTextToSpeech(f"Voici la photo, vous m'aviez dit cela à son sujet : {searchResult[2]}", LANG)
+    def destroyWindows(self):
+        self.photo1.clear()
+        self.photo2.clear()
+        self.photo3.clear()
 
 
-def main_speech_recog(newChance):
-    researchCompleted = False
-    try :
-        speechAsText = recognize(r, m, "oui ?")
-        print(speechAsText)                                             #DEBUG
-    
-        for word in keywords + facewords :
-            if word in speechAsText and not researchCompleted:
-                if word in keywords :
-                    try:
-                        cv2.destroyWindow("Photo3")
-                    except:
-                        pass
-                    imageSpeechResearch(speechAsText)
-                    researchCompleted = True
-
-                elif word in facewords :
-                    convertTextToSpeech("Pas de problème, lancement de la reconnaissance faciale.", LANG)
-                    destroyWindows()
-                    mainFaceRecog()
-                    researchCompleted = True
-
-    except sr.UnknownValueError:
-        pass
-    if not researchCompleted : 
-        convertTextToSpeech("Désolée, je n'ai pas compris.", LANG)
-        if newChance:
-            main_speech_recog(False)
+    def heyListen(self, r, audio):
+        while True:
+            if 'mainSpeechRecogThread' in self.threads.keys():
+                self.threads['mainSpeechRecogThread'].start()
+                print("Waiting")                                                                        #DEBUG
+                self.threads['mainSpeechRecogThread'].join()
+                print("done!")                                                                          #DEBUG
+                del self.threads['mainSpeechRecogThread']
+            with m as source:
+                audio = r.listen(source, phrase_time_limit=3)
             
+            threading.Thread(target=self.heyListenRecog, args=[audio]).start()
+
+
+    def convert_cv_qt(self, cv_img):
+        """Convert from an opencv image to QPixmap"""
+        rgb_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
+        h, w, ch = rgb_image.shape
+        bytes_per_line = ch * w
+        convert_to_Qt_format = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
+        return QPixmap.fromImage(convert_to_Qt_format)
+
+
+    def mainFaceRecog(self):
+        faceNames = list()
+
+        while len(faceNames) < 2:
+            faceNames, frame = recognizeFace()
+            print(faceNames)
+
+        img = self.convert_cv_qt(frame)
+        self.camera.setPixmap(img)
+        (width, height) = resizeKeepingAspectRatio(self.camera, img, width=400)
+        self.camera.move((SCREEN.width - width)//2, 10)
+        self.camera.setScaledContents(True)
+
+        convertTextToSpeech(f"Ravie de vous revoir, {faceNames[0]} et {faceNames[1]}", LANG)
+
+        similarite = getSimilarFile(faceNames[0], faceNames[1])
+
+        convertTextToSpeech("Je vais vous montrer deux images similaires parmis celles que vous m'aviez données, une image chacun.", LANG)
+        for i in range(2):
+            convertTextToSpeech(f"Voyons l'image de {faceNames[i]}", LANG)
+
+            # Photo
+            img = QPixmap(folderPath +'/'+ faceNames[i] + '/' + similarite[i][0])
+            
+            if i == 0:
+                self.photo1.setPixmap(img)
+                (width, height) = resizeKeepingAspectRatio(self.photo1, img, width=700)
+                self.photo1.move((i*(SCREEN.width - width)) + 10 - 20 * i, SCREEN.height - height - 30)
+                self.photo1.setScaledContents(True)
+
+            elif i == 1:
+                self.photo2.setPixmap(img)
+                (width, height) = resizeKeepingAspectRatio(self.photo2, img, width=700)
+                self.photo2.move((i*(SCREEN.width - width)) + 10 - 20 * i, SCREEN.height - height - 30)
+                self.photo2.setScaledContents(True)
+
+            # Title
+            imgTitle = similarite[i][1]
+            convertTextToSpeech(f"{faceNames[i]}, vous souvenez-vous de cette image ? Elle est intitulée : {imgTitle}", LANG)
+
+            # Text
+            imgText = similarite[i][2]
+            convertTextToSpeech("Je peux vous rappeler ce que vous m'aviez dit à son sujet", LANG)
+            convertTextToSpeech(f"Vous m'aviez dit : {imgText}", LANG)
+
+        end = f"{faceNames[0]}, et {faceNames[1]}, J'ai remarqué que vous aviez des intérêts communs, vous pouvez " \
+            "discuter et partager ces intérêts l'un avec l'autre, pendant ce temps, je peux vous montrer d'autres photos. " \
+            "Si vous me dites : Robot, montre-moi une photo de vélo, je vous montrerais une photo de vélo parmis vos photos. "
+        convertTextToSpeech(end, LANG)
+        
+    
+    def imageSpeechResearch(self, speechAsText):
+        faceNames = list()
+
+        convertTextToSpeech("Je cherche cela dans mes dossiers, laissez-moi juste le temps de vous reconnaître.", LANG)
+
+        while len(faceNames) < 1:
+            faceNames, frame = recognizeFace()
+            print(faceNames)                                                               #DEBUG
+            print(len(faceNames))
+        
+        if len(faceNames) >= 2:
+            researchedName = self.recognize(r, m, f"Depuis les images de {faceNames[0]} ? Ou bien celles de {faceNames[1]} ?").upper()
+        elif len(faceNames) == 1:
+            researchedName = faceNames[0]
+            faceNames.append('')
+
+        convertTextToSpeech(f"Ok, je cherche dans les dossiers de {researchedName}", LANG)
+        for word in researchedName.split():
+            if word in (faceNames[0], faceNames[1]):
+                word = faceNames[0] if word in faceNames[0] else faceNames[1]
+                searchResult = searchPictureFromDescription(word, speechAsText)
+                img = QPixmap(folderPath +'/'+ word + '/' + searchResult[0])
+                self.photo3.setPixmap(img)
+                (width, height) = resizeKeepingAspectRatio(self.photo3, img, width=700)
+                self.photo3.move((SCREEN.width - width)//2, (SCREEN.height - height)//2)
+                self.photo3.setScaledContents(True)
+                convertTextToSpeech(f"Voici la photo, vous m'aviez dit cela à son sujet : {searchResult[2]}", LANG)
+
+
+    def main_speech_recog(self, newChance):
+        researchCompleted = False
+        try :
+            speechAsText = self.recognize(r, m, "oui ?")
+            print(speechAsText)                                             #DEBUG
+            for word in keywords + facewords + killwords :
+                if word in speechAsText and not researchCompleted:
+                    if word in keywords :
+                        try:
+                            self.photo3.clear()
+                        except:
+                            pass
+                        self.imageSpeechResearch(speechAsText)
+                        researchCompleted = True
+
+                    elif word in facewords :
+                        convertTextToSpeech("Pas de problème, lancement de la reconnaissance faciale.", LANG)
+                        self.destroyWindows()
+                        self.mainFaceRecog()
+                        researchCompleted = True
+
+                    elif word in killwords :
+                        convertTextToSpeech("Au revoir !", LANG)
+                        self.destroyWindows()
+                        researchCompleted = True
+
+
+
+        except sr.UnknownValueError:
+            pass
+        if not researchCompleted : 
+            convertTextToSpeech("Désolée, je n'ai pas compris.", LANG)
+            if newChance:
+                self.main_speech_recog(False)
 
 
 if __name__ == '__main__':
@@ -451,9 +473,10 @@ if __name__ == '__main__':
     with m as source:
         r.adjust_for_ambient_noise(source)
         
+    app = QApplication(sys.argv)
+    app.setStyle('Fusion')
 
-    threads = { 'animatedBackgroundThread' : threading.Thread(target=animatedBackground),
-                'heyListenThread'          : threading.Thread(target=heyListen, args=[r,m]) }
-    
-    for thread in threads.values():
-        thread.start()
+    window = MainWindow()
+    window.showFullScreen()
+
+    app.exec()
