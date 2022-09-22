@@ -17,7 +17,8 @@ needed_packages = [ "cmake",
                     "sentence_transformers",
                     "screeninfo",
                     "PyAudio",
-                    "SpeechRecognition" ]
+                    "SpeechRecognition",
+                    "pyqt5" ]
 
 for package in needed_packages:
     install(package)

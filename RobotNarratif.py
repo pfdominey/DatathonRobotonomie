@@ -13,8 +13,7 @@ import screeninfo
 import speech_recognition as sr
 import threading
 import sys
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QListWidget, QLabel, QLineEdit, QPushButton, QPlainTextEdit, QWidget, QFileDialog, QListWidgetItem, QMessageBox, QApplication
+from PyQt5.QtWidgets import QLabel, QLineEdit, QPushButton, QWidget, QApplication
 from PyQt5.QtGui import QPixmap, QImage
 
 # screen used to open the Robotonomie window
@@ -277,6 +276,8 @@ class MainWindow(QWidget):
         self.setWindowTitle("Robot Narratif")
         self.setFixedSize(SCREEN.height, SCREEN.width)
 
+        self.automatic = True
+
         backImg = QPixmap(f'{os.getcwd()}/background/2.png')
         self.background = QLabel(self)
         self.background.setPixmap(backImg)
@@ -301,7 +302,7 @@ class MainWindow(QWidget):
             print("user : " + speechAsText)                                                         #DEBUG
             for wakeword in wakewords:
                 if speechAsText.count(wakeword) > 0:
-                    self.threads['mainSpeechRecogThread'] = threading.Thread(target=self.main_speech_recog, args=[True])   
+                    self.threads['mainSpeechRecogThread'] = threading.Thread(target=self.mainSpeechRecog, args=[True])   
 
         except sr.UnknownValueError:
             print("user : ...")
@@ -319,19 +320,35 @@ class MainWindow(QWidget):
 
 
     def destroyWindows(self):
+        convertTextToSpeech("Au revoir !", LANG)
         self.photo1.clear()
         self.photo2.clear()
         self.photo3.clear()
 
 
     def heyListen(self, r, audio):
-        while True:
+        while self.automatic:
             if 'mainSpeechRecogThread' in self.threads.keys():
                 self.threads['mainSpeechRecogThread'].start()
                 print("Waiting")                                                                        #DEBUG
                 self.threads['mainSpeechRecogThread'].join()
                 print("done!")                                                                          #DEBUG
                 del self.threads['mainSpeechRecogThread']
+
+            if 'mainFaceRecogThread' in self.threads.keys():                        #Thread utilisé uniquement lors de triche
+                self.threads['mainFaceRecogThread'].start()
+                print("Waiting")
+                self.threads['mainFaceRecogThread'].join()
+                print("done")
+                del self.threads['mainFaceRecogThread']
+
+            if 'mainSpeechResearchThread' in self.threads.keys():                   #Thread utilisé uniquement lors de triche
+                self.threads['mainSpeechResearchThread'].start()
+                print('Waiting')
+                self.threads['mainSpeechResearchThread'].join()
+                print('done')
+                del self.threads['mainSpeechResearchThread']
+
             with m as source:
                 audio = r.listen(source, phrase_time_limit=3)
             
@@ -347,14 +364,21 @@ class MainWindow(QWidget):
         return QPixmap.fromImage(convert_to_Qt_format)
 
 
-    def mainFaceRecog(self):
-        faceNames = list()
+    def mainFaceRecog(self, faceNames=list()):
 
-        while len(faceNames) < 2:
-            faceNames, frame = recognizeFace()
-            print(faceNames)
+        if len(faceNames) < 2:
 
-        img = self.convert_cv_qt(frame)
+            while len(faceNames) < 2:
+                faceNames, frame = recognizeFace()
+                print(faceNames)
+
+            img = self.convert_cv_qt(frame)
+
+        else :
+            ret, frameOr = VIDEO_CAPTURE.read()
+            img = self.convert_cv_qt(frameOr)
+
+        print(faceNames)
         self.camera.setPixmap(img)
         (width, height) = resizeKeepingAspectRatio(self.camera, img, width=400)
         self.camera.move((SCREEN.width - width)//2, 10)
@@ -364,7 +388,7 @@ class MainWindow(QWidget):
 
         similarite = getSimilarFile(faceNames[0], faceNames[1])
 
-        convertTextToSpeech("Je vais vous montrer deux images similaires parmis celles que vous m'aviez données, une image chacun.", LANG)
+        convertTextToSpeech("Je vais vous montrer deux images similaires parmi celles que vous m'aviez données, une image chacun.", LANG)
         for i in range(2):
             convertTextToSpeech(f"Voyons l'image de {faceNames[i]}", LANG)
 
@@ -398,21 +422,27 @@ class MainWindow(QWidget):
         convertTextToSpeech(end, LANG)
         
     
-    def imageSpeechResearch(self, speechAsText):
+    def imageSpeechResearch(self, speechAsText, profile=None):
         faceNames = list()
 
         convertTextToSpeech("Je cherche cela dans mes dossiers, laissez-moi juste le temps de vous reconnaître.", LANG)
 
-        while len(faceNames) < 1:
-            faceNames, frame = recognizeFace()
-            print(faceNames)                                                               #DEBUG
-            print(len(faceNames))
-        
-        if len(faceNames) >= 2:
-            researchedName = self.recognize(r, m, f"Depuis les images de {faceNames[0]} ? Ou bien celles de {faceNames[1]} ?").upper()
-        elif len(faceNames) == 1:
-            researchedName = faceNames[0]
-            faceNames.append('')
+        if not profile :
+            while len(faceNames) < 1:
+                faceNames, frame = recognizeFace()
+                print(faceNames)                                                               #DEBUG
+                print(len(faceNames))
+            
+            if len(faceNames) >= 2:
+                researchedName = self.recognize(r, m, f"Depuis les images de {faceNames[0]} ? Ou bien celles de {faceNames[1]} ?").upper()
+            elif len(faceNames) == 1:
+                researchedName = faceNames[0]
+                faceNames.append('')
+
+        else : 
+            researchedName = profile
+            faceNames = [profile, '']
+
 
         convertTextToSpeech(f"Ok, je cherche dans les dossiers de {researchedName}", LANG)
         for word in researchedName.split():
@@ -427,10 +457,13 @@ class MainWindow(QWidget):
                 convertTextToSpeech(f"Voici la photo, vous m'aviez dit cela à son sujet : {searchResult[2]}", LANG)
 
 
-    def main_speech_recog(self, newChance):
+    def mainSpeechRecog(self, newChance, forcedText=None):
         researchCompleted = False
         try :
-            speechAsText = self.recognize(r, m, "oui ?")
+            if forcedText:
+                speechAsText = forcedText
+            else :
+                speechAsText = self.recognize(r, m, "oui ?")
             print(speechAsText)                                             #DEBUG
             for word in keywords + facewords + killwords :
                 if word in speechAsText and not researchCompleted:
@@ -449,7 +482,6 @@ class MainWindow(QWidget):
                         researchCompleted = True
 
                     elif word in killwords :
-                        convertTextToSpeech("Au revoir !", LANG)
                         self.destroyWindows()
                         researchCompleted = True
 
@@ -460,7 +492,92 @@ class MainWindow(QWidget):
         if not researchCompleted : 
             convertTextToSpeech("Désolée, je n'ai pas compris.", LANG)
             if newChance:
-                self.main_speech_recog(False)
+                self.mainSpeechRecog(False)
+
+
+class CheatWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle("Terminal Intelligent de Triche Supervisée")
+        self.setFixedSize(315, 135)
+
+        self.btnForcedText = QPushButton(" Force!", self)
+        self.btnForcedText.move(265, 10)
+        self.btnForcedText.resize(40, 20)
+        self.btnForcedText.clicked.connect(self.forceSpeechRecog)
+
+        self.lineForcedText = QLineEdit(self)
+        self.lineForcedText.setPlaceholderText("Forcer la reconnaissance vocale")
+        self.lineForcedText.move(10, 10)
+        self.lineForcedText.resize(250, 20)
+
+        self.btnForceFaceRecog = QPushButton(" Force!", self)
+        self.btnForceFaceRecog.move(265, 35)
+        self.btnForceFaceRecog.resize(40, 20)
+        self.btnForceFaceRecog.clicked.connect(self.forceFaceRecog)
+
+        self.lineForcedFaces = QLineEdit(self)
+        self.lineForcedFaces.setPlaceholderText("Exemple: Tristan, Julien (FACULTATIF)")
+        self.lineForcedFaces.move(10, 35)
+        self.lineForcedFaces.resize(250, 20)
+
+        self.btnForceSpeechResearch = QPushButton(" Force!", self)
+        self.btnForceSpeechResearch.move(265, 60)
+        self.btnForceSpeechResearch.resize(40, 20)
+        self.btnForceSpeechResearch.clicked.connect(self.forceSpeechResearch)
+
+        self.lineForcedSpeechResearch = QLineEdit(self)
+        self.lineForcedSpeechResearch.setPlaceholderText("Recherche vocale")
+        self.lineForcedSpeechResearch.move(10, 60)
+        self.lineForcedSpeechResearch.resize(122, 20)
+
+        self.lineForcedSpeechResearchFace = QLineEdit(self)
+        self.lineForcedSpeechResearchFace.setPlaceholderText("Profil (FACULTATIF)")
+        self.lineForcedSpeechResearchFace.move(138, 60)
+        self.lineForcedSpeechResearchFace.resize(122, 20)
+
+        self.btnForceByeBye = QPushButton(" ByeBye IDLE ONLY /!\ ", self)
+        self.btnForceByeBye.move(10, 85)
+        self.btnForceByeBye.resize(295, 20)
+        self.btnForceByeBye.clicked.connect(window.destroyWindows)
+
+        self.btnSwitchManualAuto = QPushButton("Manual", self)
+        self.btnSwitchManualAuto.move(10, 110)
+        self.btnSwitchManualAuto.resize(295, 20)
+        self.btnSwitchManualAuto.clicked.connect(self.switchAutoRun)
+
+
+    def forceSpeechRecog(self):
+        window.threads['mainSpeechRecogThread'] = threading.Thread(target=window.mainSpeechRecog, args=[True, self.lineForcedText.text()])
+        print("Forced speech recog : " + self.lineForcedText.text())
+
+
+    def forceFaceRecog(self):
+        convertTextToSpeech("Pas de problème, lancement de la reconnaissance faciale.", LANG)
+        window.destroyWindows()
+        input = self.lineForcedFaces.text()
+        forcedFaceNames = input.upper().replace(' ', '').split(",")
+        window.threads['mainFaceRecogThread'] = threading.Thread(target=window.mainFaceRecog, args=[forcedFaceNames])
+        print("Forced face recog " + input)
+
+
+    def forceSpeechResearch(self):
+        window.photo3.clear()
+        forcedSpeechResearchText = self.lineForcedSpeechResearch.text()
+        forcedSpeechResearchFace = self.lineForcedSpeechResearchFace.text().upper().replace(' ', '-')
+        window.threads['mainSpeechResearchThread'] = threading.Thread(target=window.imageSpeechResearch, args=[forcedSpeechResearchText, forcedSpeechResearchFace])
+        print("Forced speech research : " + forcedSpeechResearchText)
+
+
+    def switchAutoRun(self):
+        window.automatic = False if window.automatic == True else True
+        print("Automatic systems : " + str(window.automatic))
+        if window.automatic == True:
+            threading.Thread(target=window.heyListen, args=[r,m]).start()
+            self.btnSwitchManualAuto.setText("Manual")
+        else:
+            self.btnSwitchManualAuto.setText("Automatic")
 
 
 if __name__ == '__main__':
@@ -478,5 +595,8 @@ if __name__ == '__main__':
 
     window = MainWindow()
     window.showFullScreen()
+
+    cheatWindow = CheatWindow()
+    cheatWindow.show()
 
     app.exec()
