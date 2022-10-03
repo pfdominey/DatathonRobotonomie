@@ -1,4 +1,4 @@
-# edited by Tristan Pinon
+# by Tristan Pinon
 # tristan.pinon@reseau.eseo.fr
 
 import face_recognition
@@ -13,8 +13,9 @@ import screeninfo
 import speech_recognition as sr
 import threading
 import sys
-from PyQt5.QtWidgets import QLabel, QLineEdit, QPushButton, QWidget, QApplication
+from PyQt5.QtWidgets import QLabel, QLineEdit, QPushButton, QWidget, QApplication, QShortcut
 from PyQt5.QtGui import QPixmap, QImage
+from PyQt5 import QtCore
 
 # screen used to open the Robotonomie window
 SCREEN_ID = 0
@@ -285,6 +286,9 @@ class MainWindow(QWidget):
         self.background.move(0, 0)
         self.background.setScaledContents(True)
 
+        self.setFullscreen = QShortcut("f", self)
+        self.setFullscreen.activated.connect(self.test)
+
         self.camera = QLabel(self)
         self.photo1 = QLabel(self)
         self.photo2 = QLabel(self)
@@ -294,6 +298,13 @@ class MainWindow(QWidget):
     
         for thread in self.threads.values():
             thread.start()
+
+    
+    def test(self):
+        if self.windowState() & QtCore.Qt.WindowFullScreen:
+            self.showNormal()
+        else:
+            self.showFullScreen()
 
 
     def heyListenRecog(self, audio):
@@ -320,14 +331,13 @@ class MainWindow(QWidget):
 
 
     def destroyWindows(self):
-        convertTextToSpeech("Au revoir !", LANG)
         self.photo1.clear()
         self.photo2.clear()
         self.photo3.clear()
 
 
     def heyListen(self, r, audio):
-        while self.automatic:
+        while True:
             if 'mainSpeechRecogThread' in self.threads.keys():
                 self.threads['mainSpeechRecogThread'].start()
                 print("Waiting")                                                                        #DEBUG
@@ -348,11 +358,11 @@ class MainWindow(QWidget):
                 self.threads['mainSpeechResearchThread'].join()
                 print('done')
                 del self.threads['mainSpeechResearchThread']
-
-            with m as source:
-                audio = r.listen(source, phrase_time_limit=3)
-            
-            threading.Thread(target=self.heyListenRecog, args=[audio]).start()
+            if self.automatic:
+                with m as source:
+                    audio = r.listen(source, phrase_time_limit=3)
+                
+                threading.Thread(target=self.heyListenRecog, args=[audio]).start()
 
 
     def convert_cv_qt(self, cv_img):
@@ -482,6 +492,7 @@ class MainWindow(QWidget):
                         researchCompleted = True
 
                     elif word in killwords :
+                        convertTextToSpeech("Au revoir !", LANG)
                         self.destroyWindows()
                         researchCompleted = True
 
@@ -500,11 +511,11 @@ class CheatWindow(QWidget):
         super().__init__()
 
         self.setWindowTitle("Terminal Intelligent de Triche Supervisée")
-        self.setFixedSize(315, 135)
+        self.setFixedSize(385, 135)
 
-        self.btnForcedText = QPushButton(" Force!", self)
+        self.btnForcedText = QPushButton("Force speech recog", self)
         self.btnForcedText.move(265, 10)
-        self.btnForcedText.resize(40, 20)
+        self.btnForcedText.resize(110, 20)
         self.btnForcedText.clicked.connect(self.forceSpeechRecog)
 
         self.lineForcedText = QLineEdit(self)
@@ -512,9 +523,9 @@ class CheatWindow(QWidget):
         self.lineForcedText.move(10, 10)
         self.lineForcedText.resize(250, 20)
 
-        self.btnForceFaceRecog = QPushButton(" Force!", self)
+        self.btnForceFaceRecog = QPushButton("Force face recog", self)
         self.btnForceFaceRecog.move(265, 35)
-        self.btnForceFaceRecog.resize(40, 20)
+        self.btnForceFaceRecog.resize(110, 20)
         self.btnForceFaceRecog.clicked.connect(self.forceFaceRecog)
 
         self.lineForcedFaces = QLineEdit(self)
@@ -522,9 +533,9 @@ class CheatWindow(QWidget):
         self.lineForcedFaces.move(10, 35)
         self.lineForcedFaces.resize(250, 20)
 
-        self.btnForceSpeechResearch = QPushButton(" Force!", self)
+        self.btnForceSpeechResearch = QPushButton("Force pic research", self)
         self.btnForceSpeechResearch.move(265, 60)
-        self.btnForceSpeechResearch.resize(40, 20)
+        self.btnForceSpeechResearch.resize(110, 20)
         self.btnForceSpeechResearch.clicked.connect(self.forceSpeechResearch)
 
         self.lineForcedSpeechResearch = QLineEdit(self)
@@ -537,14 +548,24 @@ class CheatWindow(QWidget):
         self.lineForcedSpeechResearchFace.move(138, 60)
         self.lineForcedSpeechResearchFace.resize(122, 20)
 
-        self.btnForceByeBye = QPushButton(" ByeBye IDLE ONLY /!\ ", self)
-        self.btnForceByeBye.move(10, 85)
-        self.btnForceByeBye.resize(295, 20)
-        self.btnForceByeBye.clicked.connect(window.destroyWindows)
+        self.lineForcedTTS = QLineEdit(self)
+        self.lineForcedTTS.setPlaceholderText("Text to speech")
+        self.lineForcedTTS.move(10, 85)
+        self.lineForcedTTS.resize(250, 20)
+
+        self.btnForceTTS = QPushButton("Force TTS", self)
+        self.btnForceTTS.move(265, 85)
+        self.btnForceTTS.resize(110, 20)
+        self.btnForceTTS.clicked.connect(lambda : convertTextToSpeech(self.lineForcedTTS.text(), LANG))
+
+        self.btnForceByeBye = QPushButton("ByeBye (IDLE ONLY)", self)
+        self.btnForceByeBye.move(10, 110)
+        self.btnForceByeBye.resize(180, 20)
+        self.btnForceByeBye.clicked.connect(lambda: (convertTextToSpeech("Au revoir !", LANG), window.destroyWindows))
 
         self.btnSwitchManualAuto = QPushButton("Manual", self)
-        self.btnSwitchManualAuto.move(10, 110)
-        self.btnSwitchManualAuto.resize(295, 20)
+        self.btnSwitchManualAuto.move(195, 110)
+        self.btnSwitchManualAuto.resize(180, 20)
         self.btnSwitchManualAuto.clicked.connect(self.switchAutoRun)
 
 
@@ -574,7 +595,6 @@ class CheatWindow(QWidget):
         window.automatic = False if window.automatic == True else True
         print("Automatic systems : " + str(window.automatic))
         if window.automatic == True:
-            threading.Thread(target=window.heyListen, args=[r,m]).start()
             self.btnSwitchManualAuto.setText("Manual")
         else:
             self.btnSwitchManualAuto.setText("Automatic")
