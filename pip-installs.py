@@ -1,5 +1,4 @@
 import pip
-import os
 
 def install(package):
     if hasattr(pip, 'main'):
