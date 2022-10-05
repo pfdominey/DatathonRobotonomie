@@ -407,14 +407,14 @@ class MainWindow(QWidget):
             
             if i == 0:
                 self.photo1.setPixmap(img)
-                (width, height) = resizeKeepingAspectRatio(self.photo1, img, width=700)
-                self.photo1.move((i*(SCREEN.width - width)) + 10 - 20 * i, SCREEN.height - height - 30)
+                (width, height) = resizeKeepingAspectRatio(self.photo1, img, height=int(SCREEN.height*0.9))
+                self.photo1.move((SCREEN.width - width)//2, (SCREEN.height - height)//2)
                 self.photo1.setScaledContents(True)
 
             elif i == 1:
                 self.photo2.setPixmap(img)
-                (width, height) = resizeKeepingAspectRatio(self.photo2, img, width=700)
-                self.photo2.move((i*(SCREEN.width - width)) + 10 - 20 * i, SCREEN.height - height - 30)
+                (width, height) = resizeKeepingAspectRatio(self.photo2, img, height=int(SCREEN.height*0.9))
+                self.photo2.move((SCREEN.width - width)//2, (SCREEN.height - height)//2)
                 self.photo2.setScaledContents(True)
 
             # Title
@@ -426,9 +426,14 @@ class MainWindow(QWidget):
             convertTextToSpeech("Je peux vous rappeler ce que vous m'aviez dit à son sujet", LANG)
             convertTextToSpeech(f"Vous m'aviez dit : {imgText}", LANG)
 
+        (width, height) = resizeKeepingAspectRatio(self.photo1, img, width=700)
+        self.photo1.move(10, SCREEN.height - height - 30)
+        (width, height) = resizeKeepingAspectRatio(self.photo2, img, width=700)
+        self.photo2.move(((SCREEN.width - width)) + 10 - 20, SCREEN.height - height - 30)
+
         end = f"{faceNames[0]}, et {faceNames[1]}, J'ai remarqué que vous aviez des intérêts communs, vous pouvez " \
             "discuter et partager ces intérêts l'un avec l'autre, pendant ce temps, je peux vous montrer d'autres photos. " \
-            "Si vous me dites : Robot, montre-moi une photo de vélo, je vous montrerais une photo de vélo parmis vos photos. "
+            "Si vous me dites : Robot, montre-moi une photo de vélo, je vous montrerais une photo de vélo parmi vos photos. "
         convertTextToSpeech(end, LANG)
         
     
@@ -461,7 +466,7 @@ class MainWindow(QWidget):
                 searchResult = searchPictureFromDescription(word, speechAsText)
                 img = QPixmap(folderPath +'/'+ word + '/' + searchResult[0])
                 self.photo3.setPixmap(img)
-                (width, height) = resizeKeepingAspectRatio(self.photo3, img, width=700)
+                (width, height) = resizeKeepingAspectRatio(self.photo3, img, height=int(SCREEN.height*0.9))
                 self.photo3.move((SCREEN.width - width)//2, (SCREEN.height - height)//2)
                 self.photo3.setScaledContents(True)
                 convertTextToSpeech(f"Voici la photo, vous m'aviez dit cela à son sujet : {searchResult[2]}", LANG)
@@ -475,6 +480,7 @@ class MainWindow(QWidget):
             else :
                 speechAsText = self.recognize(r, m, "oui ?")
             print(speechAsText)                                             #DEBUG
+
             for word in keywords + facewords + killwords :
                 if word in speechAsText and not researchCompleted:
                     if word in keywords :
