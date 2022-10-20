@@ -14,7 +14,7 @@ import speech_recognition as sr
 import threading
 import sys
 from PyQt5.QtWidgets import QLabel, QLineEdit, QPushButton, QWidget, QApplication, QShortcut
-from PyQt5.QtGui import QPixmap, QImage
+from PyQt5.QtGui import QPixmap, QImage, QTransform
 from PyQt5 import QtCore
 
 # screen used to open the Robotonomie window
@@ -31,12 +31,14 @@ SCREEN = screeninfo.get_monitors()[SCREEN_ID]
 
 knownFaceEncodings = []
 knownFaceNames = []
+
 LANG = "fr"
 MICROPHONE_NAME = "Microphone PC"
 wakewords = ['robot']
 keywords = ['montre', 'montrer']
 facewords = ['reconnaissance', 'faciale']
 killwords = ['au revoir', 'bientot']
+secondPictureWords = ['passe', 'prochaine']
 
 model = SentenceTransformer('distiluse-base-multilingual-cased-v1')
 
@@ -166,6 +168,7 @@ def getsimilarity(patient_1, patient_2, dfTexts, dfPhotos, dfTitles):
     cosineScore = util.pytorch_cos_sim(embeddingsPatient_1, embeddingsPatient_2)
 
     cosineMax=cosineScore.max().item()
+    cosineMax
     index_1=-789
     index_2=-345
     for k in range(len(cosineScore)):
@@ -278,8 +281,9 @@ class MainWindow(QWidget):
         self.setFixedSize(SCREEN.height, SCREEN.width)
 
         self.automatic = True
+        self.goSecondPictureFaceRecog = False
 
-        backImg = QPixmap(f'{os.getcwd()}/background/2.png')
+        backImg = QPixmap(f'{os.getcwd()}/background/PepperHead.png')
         self.background = QLabel(self)
         self.background.setPixmap(backImg)
         resizeKeepingAspectRatio(self.background, backImg, height=SCREEN.height, width=SCREEN.width)
@@ -287,20 +291,34 @@ class MainWindow(QWidget):
         self.background.setScaledContents(True)
 
         self.setFullscreen = QShortcut("f", self)
-        self.setFullscreen.activated.connect(self.test)
+        self.setFullscreen.activated.connect(self.switchFullscreen)
 
         self.camera = QLabel(self)
         self.photo1 = QLabel(self)
         self.photo2 = QLabel(self)
         self.photo3 = QLabel(self)
 
+        self.photo = (self.photo1, self.photo2, self.photo3)
+
         self.threads = { 'heyListenThread' : threading.Thread(target=self.heyListen, args=[r,m]) }
     
         for thread in self.threads.values():
             thread.start()
 
+        self.recognizedFaces = []
+        self.facesFrame = None
+
+
+    def convert_cv_qt(self, cv_img):
+        """Convert from an opencv image to QPixmap"""
+        rgb_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
+        h, w, ch = rgb_image.shape
+        bytes_per_line = ch * w
+        convert_to_Qt_format = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
+        return QPixmap.fromImage(convert_to_Qt_format)
+
     
-    def test(self):
+    def switchFullscreen(self):
         if self.windowState() & QtCore.Qt.WindowFullScreen:
             self.showNormal()
         else:
@@ -322,18 +340,25 @@ class MainWindow(QWidget):
 
 
     def recognize(self, r, m, text):
-        convertTextToSpeech(text, LANG)
-        with m as source:
-            audio = r.listen(source, phrase_time_limit=5)
-        speechAsText = r.recognize_google(audio, language="fr-FR")
-        print("user : " + speechAsText)                                                     #DEBUG
-        return speechAsText
+        try :
+            convertTextToSpeech(text, LANG)
+            with m as source:
+                audio = r.listen(source, phrase_time_limit=5)
+            speechAsText = r.recognize_google(audio, language="fr-FR")
+            print("user : " + speechAsText)                                                     #DEBUG
+            return speechAsText
+
+        except sr.UnknownValueError:
+            pass
 
 
     def destroyWindows(self):
+        convertTextToSpeech("Au revoir !", LANG)
         self.photo1.clear()
         self.photo2.clear()
         self.photo3.clear()
+        self.recognizedFaces = []
+        self.facesFrame = None
 
 
     def heyListen(self, r, audio):
@@ -365,28 +390,21 @@ class MainWindow(QWidget):
                 threading.Thread(target=self.heyListenRecog, args=[audio]).start()
 
 
-    def convert_cv_qt(self, cv_img):
-        """Convert from an opencv image to QPixmap"""
-        rgb_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
-        h, w, ch = rgb_image.shape
-        bytes_per_line = ch * w
-        convert_to_Qt_format = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
-        return QPixmap.fromImage(convert_to_Qt_format)
+    def mainFaceRecog(self, profile=None):
 
-
-    def mainFaceRecog(self, faceNames=list()):
-
-        if len(faceNames) < 2:
-
-            while len(faceNames) < 2:
-                faceNames, frame = recognizeFace()
-                print(faceNames)
-
-            img = self.convert_cv_qt(frame)
-
-        else :
+        if profile != None:
+            faceNames = profile
             ret, frameOr = VIDEO_CAPTURE.read()
             img = self.convert_cv_qt(frameOr)
+
+        else:
+            while len(self.recognizedFaces) < 2:
+                self.recognizedFaces, self.facesFrame = recognizeFace()
+                print(self.recognizedFaces)
+
+            faceNames = self.recognizedFaces.copy()
+
+        img = self.convert_cv_qt(self.facesFrame)
 
         print(faceNames)
         self.camera.setPixmap(img)
@@ -404,18 +422,15 @@ class MainWindow(QWidget):
 
             # Photo
             img = QPixmap(folderPath +'/'+ faceNames[i] + '/' + similarite[i][0])
-            
-            if i == 0:
-                self.photo1.setPixmap(img)
-                (width, height) = resizeKeepingAspectRatio(self.photo1, img, height=int(SCREEN.height*0.9))
-                self.photo1.move((SCREEN.width - width)//2, (SCREEN.height - height)//2)
-                self.photo1.setScaledContents(True)
 
-            elif i == 1:
-                self.photo2.setPixmap(img)
-                (width, height) = resizeKeepingAspectRatio(self.photo2, img, height=int(SCREEN.height*0.9))
-                self.photo2.move((SCREEN.width - width)//2, (SCREEN.height - height)//2)
-                self.photo2.setScaledContents(True)
+            (h, w) = cv2.imread(folderPath +'/'+ faceNames[i] + '/' + similarite[i][0]).shape[:2]
+            if h > w:
+                img = img.transformed(QTransform().rotate(90))
+            
+            self.photo[i].setPixmap(img)
+            (width, height) = resizeKeepingAspectRatio(self.photo[i], img, height=int(SCREEN.height*0.9))
+            self.photo[i].move((SCREEN.width - width)//2, (SCREEN.height - height)//2)
+            self.photo[i].setScaledContents(True)
 
             # Title
             imgTitle = similarite[i][1]
@@ -425,6 +440,9 @@ class MainWindow(QWidget):
             imgText = similarite[i][2]
             convertTextToSpeech("Je peux vous rappeler ce que vous m'aviez dit à son sujet", LANG)
             convertTextToSpeech(f"Vous m'aviez dit : {imgText}", LANG)
+
+            if i == 0:
+                self.goSecondPicture()
 
         (width, height) = resizeKeepingAspectRatio(self.photo1, img, width=700)
         self.photo1.move(10, SCREEN.height - height - 30)
@@ -438,25 +456,21 @@ class MainWindow(QWidget):
         
     
     def imageSpeechResearch(self, speechAsText, profile=None):
-        faceNames = list()
 
-        convertTextToSpeech("Je cherche cela dans mes dossiers, laissez-moi juste le temps de vous reconnaître.", LANG)
+        if profile != None:
+            faceNames = profile
 
-        if not profile :
-            while len(faceNames) < 1:
-                faceNames, frame = recognizeFace()
-                print(faceNames)                                                               #DEBUG
-                print(len(faceNames))
-            
-            if len(faceNames) >= 2:
-                researchedName = self.recognize(r, m, f"Depuis les images de {faceNames[0]} ? Ou bien celles de {faceNames[1]} ?").upper()
-            elif len(faceNames) == 1:
-                researchedName = faceNames[0]
-                faceNames.append('')
+        while len(self.recognizedFaces) < 1:
+            self.recognizedFaces, self.facesFrame = recognizeFace()
 
-        else : 
-            researchedName = profile
-            faceNames = [profile, '']
+        faceNames = self.recognizedFaces.copy()
+        researchedName = ''
+
+        if len(faceNames) == 2:
+            researchedName = self.recognize(r, m, f"Depuis les images de {faceNames[0]} ? Ou bien celles de {faceNames[1]} ?").upper()
+        elif len(faceNames) == 1:
+            researchedName = faceNames[0]
+            faceNames.append('')
 
 
         convertTextToSpeech(f"Ok, je cherche dans les dossiers de {researchedName}", LANG)
@@ -465,6 +479,11 @@ class MainWindow(QWidget):
                 word = faceNames[0] if word in faceNames[0] else faceNames[1]
                 searchResult = searchPictureFromDescription(word, speechAsText)
                 img = QPixmap(folderPath +'/'+ word + '/' + searchResult[0])
+
+                (h, w) = cv2.imread(folderPath +'/'+ word + '/' + searchResult[0]).shape[:2]
+                if h > w:
+                    img = img.transformed(QTransform().rotate(90))
+
                 self.photo3.setPixmap(img)
                 (width, height) = resizeKeepingAspectRatio(self.photo3, img, height=int(SCREEN.height*0.9))
                 self.photo3.move((SCREEN.width - width)//2, (SCREEN.height - height)//2)
@@ -474,42 +493,62 @@ class MainWindow(QWidget):
 
     def mainSpeechRecog(self, newChance, forcedText=None):
         researchCompleted = False
-        try :
-            if forcedText:
-                speechAsText = forcedText
-            else :
-                speechAsText = self.recognize(r, m, "oui ?")
-            print(speechAsText)                                             #DEBUG
+        
+        if forcedText:
+            speechAsText = forcedText
+        else :
+            speechAsText = self.recognize(r, m, "oui ?")
+        print(speechAsText)                                             #DEBUG
 
-            for word in keywords + facewords + killwords :
-                if word in speechAsText and not researchCompleted:
-                    if word in keywords :
-                        try:
-                            self.photo3.clear()
-                        except:
-                            pass
-                        self.imageSpeechResearch(speechAsText)
-                        researchCompleted = True
+        while len(self.recognizedFaces) < 1:
+            self.recognizedFaces, self.facesFrame = recognizeFace()
 
-                    elif word in facewords :
-                        convertTextToSpeech("Pas de problème, lancement de la reconnaissance faciale.", LANG)
-                        self.destroyWindows()
-                        self.mainFaceRecog()
-                        researchCompleted = True
+        for word in keywords + facewords + killwords :
+            if word in speechAsText and not researchCompleted:
+                if word in keywords :
+                    try:
+                        self.photo3.clear()
+                    except:
+                        pass
+                    self.imageSpeechResearch(speechAsText)
+                    researchCompleted = True
 
-                    elif word in killwords :
-                        convertTextToSpeech("Au revoir !", LANG)
-                        self.destroyWindows()
-                        researchCompleted = True
+                elif word in facewords :
+                    convertTextToSpeech("Pas de problème, lancement de la reconnaissance faciale.", LANG)
+                    self.destroyWindows()
+                    self.mainFaceRecog()
+                    researchCompleted = True
 
+                elif word in killwords :
+                    self.destroyWindows()
+                    researchCompleted = True
 
-
-        except sr.UnknownValueError:
-            pass
         if not researchCompleted : 
             convertTextToSpeech("Désolée, je n'ai pas compris.", LANG)
             if newChance:
                 self.mainSpeechRecog(False)
+
+
+    def goSecondPicture(self):
+        while self.goSecondPictureFaceRecog == False:
+            with m as source:
+                    audio = r.listen(source, phrase_time_limit=3)
+                
+            threading.Thread(target=self.goSecondPictureRecog, args=[audio]).start()
+
+
+    def goSecondPictureRecog(self, audio):
+        try:
+            speechAsText = r.recognize_google(audio, language="fr-FR")
+            print("user : " + speechAsText)                                                         #DEBUG
+            for secondPictureWord in secondPictureWords:
+                if speechAsText.count(secondPictureWord) > 0:
+                    self.goSecondPictureFaceRecog = True
+
+        except sr.UnknownValueError:
+            print("user : ...")
+        except sr.RequestError as e:
+            print("Le service Google Speech API a rencontré une erreur " + format(e))                            #DEBUG
 
 
 class CheatWindow(QWidget):
@@ -517,7 +556,7 @@ class CheatWindow(QWidget):
         super().__init__()
 
         self.setWindowTitle("Terminal Intelligent de Triche Supervisée")
-        self.setFixedSize(385, 135)
+        self.setFixedSize(385, 185)
 
         self.btnForcedText = QPushButton("Force speech recog", self)
         self.btnForcedText.move(265, 10)
@@ -539,38 +578,53 @@ class CheatWindow(QWidget):
         self.lineForcedFaces.move(10, 35)
         self.lineForcedFaces.resize(250, 20)
 
+        self.currentFaces = QLabel(self)
+        self.currentFaces.move(10, 60)
+        self.currentFaces.setText("Current Faces : ")
+        self.currentFaces.resize(190, 20)
+
+        self.btnRefreshCurrentFaces = QPushButton("Refresh", self)
+        self.btnRefreshCurrentFaces.move(265, 60)
+        self.btnRefreshCurrentFaces.resize(110, 20)
+        self.btnRefreshCurrentFaces.clicked.connect(self.refreshCurrentFaces)
+
+        self.btnForceGoSecondPicture = QPushButton("Go to second picture", self)
+        self.btnForceGoSecondPicture.move(10, 85)
+        self.btnForceGoSecondPicture.resize(110,20)
+        self.btnForceGoSecondPicture.clicked.connect(self.forceGoSecondPicture)
+
         self.btnForceSpeechResearch = QPushButton("Force pic research", self)
-        self.btnForceSpeechResearch.move(265, 60)
+        self.btnForceSpeechResearch.move(265, 110)
         self.btnForceSpeechResearch.resize(110, 20)
         self.btnForceSpeechResearch.clicked.connect(self.forceSpeechResearch)
 
         self.lineForcedSpeechResearch = QLineEdit(self)
         self.lineForcedSpeechResearch.setPlaceholderText("Recherche vocale")
-        self.lineForcedSpeechResearch.move(10, 60)
+        self.lineForcedSpeechResearch.move(10, 110)
         self.lineForcedSpeechResearch.resize(122, 20)
 
         self.lineForcedSpeechResearchFace = QLineEdit(self)
-        self.lineForcedSpeechResearchFace.setPlaceholderText("Profil (FACULTATIF)")
-        self.lineForcedSpeechResearchFace.move(138, 60)
+        self.lineForcedSpeechResearchFace.setPlaceholderText("Profil(s) (FACULTATIF)")
+        self.lineForcedSpeechResearchFace.move(138, 110)
         self.lineForcedSpeechResearchFace.resize(122, 20)
 
         self.lineForcedTTS = QLineEdit(self)
         self.lineForcedTTS.setPlaceholderText("Text to speech")
-        self.lineForcedTTS.move(10, 85)
+        self.lineForcedTTS.move(10, 135)
         self.lineForcedTTS.resize(250, 20)
 
         self.btnForceTTS = QPushButton("Force TTS", self)
-        self.btnForceTTS.move(265, 85)
+        self.btnForceTTS.move(265, 135)
         self.btnForceTTS.resize(110, 20)
         self.btnForceTTS.clicked.connect(lambda : convertTextToSpeech(self.lineForcedTTS.text(), LANG))
 
         self.btnForceByeBye = QPushButton("ByeBye (IDLE ONLY)", self)
-        self.btnForceByeBye.move(10, 110)
+        self.btnForceByeBye.move(10, 160)
         self.btnForceByeBye.resize(180, 20)
-        self.btnForceByeBye.clicked.connect(lambda: (convertTextToSpeech("Au revoir !", LANG), window.destroyWindows))
+        self.btnForceByeBye.clicked.connect(window.destroyWindows)
 
         self.btnSwitchManualAuto = QPushButton("Manual", self)
-        self.btnSwitchManualAuto.move(195, 110)
+        self.btnSwitchManualAuto.move(195, 160)
         self.btnSwitchManualAuto.resize(180, 20)
         self.btnSwitchManualAuto.clicked.connect(self.switchAutoRun)
 
@@ -592,7 +646,10 @@ class CheatWindow(QWidget):
     def forceSpeechResearch(self):
         window.photo3.clear()
         forcedSpeechResearchText = self.lineForcedSpeechResearch.text()
-        forcedSpeechResearchFace = self.lineForcedSpeechResearchFace.text().upper().replace(' ', '-')
+        forcedSpeechResearchFace = self.lineForcedSpeechResearchFace.text().upper().replace(' ', '').split(",")
+        if len(forcedSpeechResearchFace[0]) < 1:
+            forcedSpeechResearchFace = None
+
         window.threads['mainSpeechResearchThread'] = threading.Thread(target=window.imageSpeechResearch, args=[forcedSpeechResearchText, forcedSpeechResearchFace])
         print("Forced speech research : " + forcedSpeechResearchText)
 
@@ -604,6 +661,17 @@ class CheatWindow(QWidget):
             self.btnSwitchManualAuto.setText("Manual")
         else:
             self.btnSwitchManualAuto.setText("Automatic")
+
+    def refreshCurrentFaces(self):
+        text = "Current Faces :"
+        for name in window.recognizedFaces:
+            text = text + ' ' + name
+        
+        print(text)
+        self.currentFaces.setText(text)
+
+    def forceGoSecondPicture(self):
+        window.goSecondPictureFaceRecog = True
 
 
 if __name__ == '__main__':

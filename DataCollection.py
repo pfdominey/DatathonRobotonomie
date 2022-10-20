@@ -201,7 +201,7 @@ class MainWindow(QWidget):
 
     def createProfile(self):
         name = self.searchBar.text().upper().replace(' ', '-')
-        try :
+        try :   
             os.mkdir(f"./{imageDirectory}/{name}")
             item = QListWidgetItem(name)
             self.listePatients.insertItem(len(os.listdir(imageDirectory))+1, item)
