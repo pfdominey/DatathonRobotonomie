@@ -353,12 +353,10 @@ class MainWindow(QWidget):
 
 
     def destroyWindows(self):
-        convertTextToSpeech("Au revoir !", LANG)
         self.photo1.clear()
         self.photo2.clear()
         self.photo3.clear()
-        self.recognizedFaces = []
-        self.facesFrame = None
+        
 
 
     def heyListen(self, r, audio):
@@ -403,8 +401,7 @@ class MainWindow(QWidget):
                 print(self.recognizedFaces)
 
             faceNames = self.recognizedFaces.copy()
-
-        img = self.convert_cv_qt(self.facesFrame)
+            img = self.convert_cv_qt(self.facesFrame)      
 
         print(faceNames)
         self.camera.setPixmap(img)
@@ -520,7 +517,10 @@ class MainWindow(QWidget):
                     researchCompleted = True
 
                 elif word in killwords :
+                    convertTextToSpeech("Au revoir !", LANG)
                     self.destroyWindows()
+                    self.recognizedFaces = []
+                    self.facesFrame = None
                     researchCompleted = True
 
         if not researchCompleted : 
@@ -578,35 +578,35 @@ class CheatWindow(QWidget):
         self.lineForcedFaces.move(10, 35)
         self.lineForcedFaces.resize(250, 20)
 
-        self.currentFaces = QLabel(self)
-        self.currentFaces.move(10, 60)
-        self.currentFaces.setText("Current Faces : ")
-        self.currentFaces.resize(190, 20)
-
-        self.btnRefreshCurrentFaces = QPushButton("Refresh", self)
-        self.btnRefreshCurrentFaces.move(265, 60)
-        self.btnRefreshCurrentFaces.resize(110, 20)
-        self.btnRefreshCurrentFaces.clicked.connect(self.refreshCurrentFaces)
-
         self.btnForceGoSecondPicture = QPushButton("Go to second picture", self)
-        self.btnForceGoSecondPicture.move(10, 85)
+        self.btnForceGoSecondPicture.move(10, 60)
         self.btnForceGoSecondPicture.resize(110,20)
         self.btnForceGoSecondPicture.clicked.connect(self.forceGoSecondPicture)
 
         self.btnForceSpeechResearch = QPushButton("Force pic research", self)
-        self.btnForceSpeechResearch.move(265, 110)
+        self.btnForceSpeechResearch.move(265, 85)
         self.btnForceSpeechResearch.resize(110, 20)
         self.btnForceSpeechResearch.clicked.connect(self.forceSpeechResearch)
 
         self.lineForcedSpeechResearch = QLineEdit(self)
         self.lineForcedSpeechResearch.setPlaceholderText("Recherche vocale")
-        self.lineForcedSpeechResearch.move(10, 110)
+        self.lineForcedSpeechResearch.move(10, 85)
         self.lineForcedSpeechResearch.resize(122, 20)
 
         self.lineForcedSpeechResearchFace = QLineEdit(self)
         self.lineForcedSpeechResearchFace.setPlaceholderText("Profil(s) (FACULTATIF)")
-        self.lineForcedSpeechResearchFace.move(138, 110)
+        self.lineForcedSpeechResearchFace.move(138, 85)
         self.lineForcedSpeechResearchFace.resize(122, 20)
+
+        self.currentFaces = QLabel(self)
+        self.currentFaces.move(10, 110)
+        self.currentFaces.setText("Current Faces : ")
+        self.currentFaces.resize(190, 20)
+
+        self.btnRefreshCurrentFaces = QPushButton("Refresh", self)
+        self.btnRefreshCurrentFaces.move(265, 110)
+        self.btnRefreshCurrentFaces.resize(110, 20)
+        self.btnRefreshCurrentFaces.clicked.connect(self.refreshCurrentFaces)
 
         self.lineForcedTTS = QLineEdit(self)
         self.lineForcedTTS.setPlaceholderText("Text to speech")
@@ -621,7 +621,7 @@ class CheatWindow(QWidget):
         self.btnForceByeBye = QPushButton("ByeBye (IDLE ONLY)", self)
         self.btnForceByeBye.move(10, 160)
         self.btnForceByeBye.resize(180, 20)
-        self.btnForceByeBye.clicked.connect(window.destroyWindows)
+        self.btnForceByeBye.clicked.connect(self.forceGoodbye)
 
         self.btnSwitchManualAuto = QPushButton("Manual", self)
         self.btnSwitchManualAuto.move(195, 160)
@@ -652,6 +652,12 @@ class CheatWindow(QWidget):
 
         window.threads['mainSpeechResearchThread'] = threading.Thread(target=window.imageSpeechResearch, args=[forcedSpeechResearchText, forcedSpeechResearchFace])
         print("Forced speech research : " + forcedSpeechResearchText)
+
+    def forceGoodbye(self):
+        convertTextToSpeech("Au revoir !", LANG)
+        window.destroyWindows()
+        window.recognizedFaces = []
+        window.facesFrame = None
 
 
     def switchAutoRun(self):
