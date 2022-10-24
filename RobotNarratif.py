@@ -33,7 +33,7 @@ knownFaceEncodings = []
 knownFaceNames = []
 
 LANG = "fr"
-MICROPHONE_NAME = "Microphone PC"
+MICROPHONE_NAME = "Stereo"
 wakewords = ['robot']
 keywords = ['montre', 'montrer']
 facewords = ['reconnaissance', 'faciale']
@@ -356,6 +356,7 @@ class MainWindow(QWidget):
         self.photo1.clear()
         self.photo2.clear()
         self.photo3.clear()
+        self.camera.clear()
         
 
 
@@ -414,18 +415,15 @@ class MainWindow(QWidget):
         similarite = getSimilarFile(faceNames[0], faceNames[1])
 
         convertTextToSpeech("Je vais vous montrer deux images similaires parmi celles que vous m'aviez données, une image chacun.", LANG)
+        img = list()
         for i in range(2):
             convertTextToSpeech(f"Voyons l'image de {faceNames[i]}", LANG)
 
             # Photo
-            img = QPixmap(folderPath +'/'+ faceNames[i] + '/' + similarite[i][0])
-
-            (h, w) = cv2.imread(folderPath +'/'+ faceNames[i] + '/' + similarite[i][0]).shape[:2]
-            if h > w:
-                img = img.transformed(QTransform().rotate(90))
+            img.append(QPixmap(folderPath +'/'+ faceNames[i] + '/' + similarite[i][0])) 
             
-            self.photo[i].setPixmap(img)
-            (width, height) = resizeKeepingAspectRatio(self.photo[i], img, height=int(SCREEN.height*0.9))
+            self.photo[i].setPixmap(img[i])
+            (width, height) = resizeKeepingAspectRatio(self.photo[i], img[i], height=int(SCREEN.height*0.9))
             self.photo[i].move((SCREEN.width - width)//2, (SCREEN.height - height)//2)
             self.photo[i].setScaledContents(True)
 
@@ -439,11 +437,12 @@ class MainWindow(QWidget):
             convertTextToSpeech(f"Vous m'aviez dit : {imgText}", LANG)
 
             if i == 0:
+                convertTextToSpeech("Je vous laisse discuter, lorsque vous voudrez passer à la photo suivante, dites passe, ou, prochaine.", LANG)
                 self.goSecondPicture()
 
-        (width, height) = resizeKeepingAspectRatio(self.photo1, img, width=700)
+        (width, height) = resizeKeepingAspectRatio(self.photo1, img[0], width=700)
         self.photo1.move(10, SCREEN.height - height - 30)
-        (width, height) = resizeKeepingAspectRatio(self.photo2, img, width=700)
+        (width, height) = resizeKeepingAspectRatio(self.photo2, img[1], width=700)
         self.photo2.move(((SCREEN.width - width)) + 10 - 20, SCREEN.height - height - 30)
 
         end = f"{faceNames[0]}, et {faceNames[1]}, J'ai remarqué que vous aviez des intérêts communs, vous pouvez " \
@@ -457,10 +456,11 @@ class MainWindow(QWidget):
         if profile != None:
             faceNames = profile
 
-        while len(self.recognizedFaces) < 1:
-            self.recognizedFaces, self.facesFrame = recognizeFace()
+        else:
+            while len(self.recognizedFaces) < 1:
+                self.recognizedFaces, self.facesFrame = recognizeFace()
+            faceNames = self.recognizedFaces.copy()
 
-        faceNames = self.recognizedFaces.copy()
         researchedName = ''
 
         if len(faceNames) == 2:
@@ -476,10 +476,6 @@ class MainWindow(QWidget):
                 word = faceNames[0] if word in faceNames[0] else faceNames[1]
                 searchResult = searchPictureFromDescription(word, speechAsText)
                 img = QPixmap(folderPath +'/'+ word + '/' + searchResult[0])
-
-                (h, w) = cv2.imread(folderPath +'/'+ word + '/' + searchResult[0]).shape[:2]
-                if h > w:
-                    img = img.transformed(QTransform().rotate(90))
 
                 self.photo3.setPixmap(img)
                 (width, height) = resizeKeepingAspectRatio(self.photo3, img, height=int(SCREEN.height*0.9))
