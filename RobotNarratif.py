@@ -14,7 +14,7 @@ import speech_recognition as sr
 import threading
 import sys
 from PyQt5.QtWidgets import QLabel, QLineEdit, QPushButton, QWidget, QApplication, QShortcut
-from PyQt5.QtGui import QPixmap, QImage, QTransform
+from PyQt5.QtGui import QPixmap, QImage
 from PyQt5 import QtCore
 
 # screen used to open the Robotonomie window
@@ -24,7 +24,7 @@ SCREEN_ID = 0
 IMAGE_DIRECTORY = f"{os.getcwd()}/data"
 
 # reference to webcam
-VIDEO_CAPTURE = cv2.VideoCapture(0)
+VIDEO_CAPTURE = cv2.VideoCapture(0)                             # A CHANGER EN FONCTION DE LA CAMERA (0 si qu'une seule camera est connectée)
 
 # get the size of the SCREEN
 SCREEN = screeninfo.get_monitors()[SCREEN_ID]
@@ -33,11 +33,11 @@ knownFaceEncodings = []
 knownFaceNames = []
 
 LANG = "fr"
-MICROPHONE_NAME = "Stereo"
+MICROPHONE_NAME = "Microphone PC"                                      # A CHANGER EN FONCTION DU MICRO
 wakewords = ['robot']
-keywords = ['montre', 'montrer']
+searchwords = ['montre', 'montrer']
 facewords = ['reconnaissance', 'faciale']
-killwords = ['au revoir', 'bientot']
+killwords = ['au revoir', 'bientôt']
 secondPictureWords = ['passe', 'prochaine']
 
 model = SentenceTransformer('distiluse-base-multilingual-cased-v1')
@@ -166,6 +166,8 @@ def getsimilarity(patient_1, patient_2, dfTexts, dfPhotos, dfTitles):
 
     # compute similarity scores of two embeddings
     cosineScore = util.pytorch_cos_sim(embeddingsPatient_1, embeddingsPatient_2)
+
+    print(cosineScore)
 
     cosineMax=cosineScore.max().item()
     cosineMax
@@ -389,6 +391,8 @@ class MainWindow(QWidget):
 
     def mainFaceRecog(self, profile=None):          #Face recog function (2 subjects and similarity to show pictures)
 
+        self.goSecondPictureFaceRecog = False
+
         if profile != None:
             faceNames = profile
             ret, frameOr = VIDEO_CAPTURE.read()
@@ -494,9 +498,9 @@ class MainWindow(QWidget):
         while len(self.recognizedFaces) < 1:
             self.recognizedFaces, self.facesFrame = recognizeFace()
 
-        for word in keywords + facewords + killwords :
+        for word in searchwords + facewords + killwords :
             if word in speechAsText and not researchCompleted:
-                if word in keywords :
+                if word in searchwords :
                     try:
                         self.photo3.clear()
                     except:
@@ -647,6 +651,7 @@ class CheatWindow(QWidget):
         window.threads['mainSpeechResearchThread'] = threading.Thread(target=window.imageSpeechResearch, args=[forcedSpeechResearchText, forcedSpeechResearchFace])
         print("Forced speech research : " + forcedSpeechResearchText)
 
+
     def forceGoodbye(self):
         convertTextToSpeech("Au revoir !", LANG)
         window.destroyWindows()
@@ -654,7 +659,7 @@ class CheatWindow(QWidget):
         window.facesFrame = None
 
 
-    def switchAutoRun(self):
+    def switchAutoRun(self):                #Manual/Automatic
         window.automatic = False if window.automatic == True else True
         print("Automatic systems : " + str(window.automatic))
         if window.automatic == True:
@@ -662,13 +667,15 @@ class CheatWindow(QWidget):
         else:
             self.btnSwitchManualAuto.setText("Automatic")
 
-    def refreshCurrentFaces(self):
+
+    def refreshCurrentFaces(self):      #Print the current recognized and kept in memory faces
         text = "Current Faces :"
         for name in window.recognizedFaces:
             text = text + ' ' + name
         
         print(text)
         self.currentFaces.setText(text)
+
 
     def forceGoSecondPicture(self):
         window.goSecondPictureFaceRecog = True
