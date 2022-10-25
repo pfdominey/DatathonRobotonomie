@@ -43,7 +43,7 @@ secondPictureWords = ['passe', 'prochaine']
 model = SentenceTransformer('distiluse-base-multilingual-cased-v1')
 
 
-def processUsersEncodings():
+def processUsersEncodings():                
     persons = os.listdir(folderPath)
 
     for person in persons:
@@ -185,7 +185,6 @@ def getsimilarity(patient_1, patient_2, dfTexts, dfPhotos, dfTitles):
     photoTitle_2 = dfTitles[patient_2].dropna().iloc[index_2]
     photoText_2 = dfTexts[patient_2].dropna().iloc[index_2]
 
-    ''' return à checker pour la suite'''
     return (photoFile_1, photoTitle_1, photoText_1, photoFile_2, photoTitle_2, photoText_2)
 
 
@@ -309,8 +308,7 @@ class MainWindow(QWidget):
         self.facesFrame = None
 
 
-    def convert_cv_qt(self, cv_img):
-        """Convert from an opencv image to QPixmap"""
+    def convert_cv_qt(self, cv_img):                 #Convert from an opencv image to QPixmap
         rgb_image = cv2.cvtColor(cv_img, cv2.COLOR_BGR2RGB)
         h, w, ch = rgb_image.shape
         bytes_per_line = ch * w
@@ -325,7 +323,7 @@ class MainWindow(QWidget):
             self.showFullScreen()
 
 
-    def heyListenRecog(self, audio):
+    def heyListenRecog(self, audio):            #Recognizer for the wake up function
         try:
             speechAsText = r.recognize_google(audio, language="fr-FR")
             print("user : " + speechAsText)                                                         #DEBUG
@@ -339,7 +337,7 @@ class MainWindow(QWidget):
             print("Le service Google Speech API a rencontré une erreur " + format(e))                            #DEBUG
 
 
-    def recognize(self, r, m, text):
+    def recognize(self, r, m, text):            #base speech recognizer for everything but wake-up functions
         try :
             convertTextToSpeech(text, LANG)
             with m as source:
@@ -352,7 +350,7 @@ class MainWindow(QWidget):
             pass
 
 
-    def destroyWindows(self):
+    def destroyWindows(self):               #clear the photo labels
         self.photo1.clear()
         self.photo2.clear()
         self.photo3.clear()
@@ -360,7 +358,7 @@ class MainWindow(QWidget):
         
 
 
-    def heyListen(self, r, audio):
+    def heyListen(self, r, audio):                  #Wait for the user to use wakewords to wake up the system
         while True:
             if 'mainSpeechRecogThread' in self.threads.keys():
                 self.threads['mainSpeechRecogThread'].start()
@@ -389,7 +387,7 @@ class MainWindow(QWidget):
                 threading.Thread(target=self.heyListenRecog, args=[audio]).start()
 
 
-    def mainFaceRecog(self, profile=None):
+    def mainFaceRecog(self, profile=None):          #Face recog function (2 subjects and similarity to show pictures)
 
         if profile != None:
             faceNames = profile
@@ -451,7 +449,7 @@ class MainWindow(QWidget):
         convertTextToSpeech(end, LANG)
         
     
-    def imageSpeechResearch(self, speechAsText, profile=None):
+    def imageSpeechResearch(self, speechAsText, profile=None):          #Vocal image research function ("Show me ...")
 
         if profile != None:
             faceNames = profile
@@ -484,7 +482,7 @@ class MainWindow(QWidget):
                 convertTextToSpeech(f"Voici la photo, vous m'aviez dit cela à son sujet : {searchResult[2]}", LANG)
 
 
-    def mainSpeechRecog(self, newChance, forcedText=None):
+    def mainSpeechRecog(self, newChance, forcedText=None):          #"Crossroad" function, it recognizes the user's request
         researchCompleted = False
         
         if forcedText:
@@ -525,7 +523,7 @@ class MainWindow(QWidget):
                 self.mainSpeechRecog(False)
 
 
-    def goSecondPicture(self):
+    def goSecondPicture(self):          #Wait for the user to allow the second picture to appear during the face recognition procedure
         while self.goSecondPictureFaceRecog == False:
             with m as source:
                     audio = r.listen(source, phrase_time_limit=3)
@@ -533,7 +531,7 @@ class MainWindow(QWidget):
             threading.Thread(target=self.goSecondPictureRecog, args=[audio]).start()
 
 
-    def goSecondPictureRecog(self, audio):
+    def goSecondPictureRecog(self, audio):          #Recognizer for the goSecondPicture() function
         try:
             speechAsText = r.recognize_google(audio, language="fr-FR")
             print("user : " + speechAsText)                                                         #DEBUG
