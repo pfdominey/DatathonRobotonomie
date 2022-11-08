@@ -294,7 +294,7 @@ class MainWindow(QWidget):
         self.setFullscreen = QShortcut("f", self)
         self.setFullscreen.activated.connect(self.switchFullscreen)
 
-        self.camera = QLabel(self)
+        #self.camera = QLabel(self)
         self.photo1 = QLabel(self)
         self.photo2 = QLabel(self)
         self.photo3 = QLabel(self)
@@ -316,8 +316,8 @@ class MainWindow(QWidget):
         bytes_per_line = ch * w
         convert_to_Qt_format = QImage(rgb_image.data, w, h, bytes_per_line, QImage.Format_RGB888)
         return QPixmap.fromImage(convert_to_Qt_format)
+        
 
-    
     def switchFullscreen(self):
         if self.windowState() & QtCore.Qt.WindowFullScreen:
             self.showNormal()
@@ -356,11 +356,11 @@ class MainWindow(QWidget):
         self.photo1.clear()
         self.photo2.clear()
         self.photo3.clear()
-        self.camera.clear()
+        #self.camera.clear()
         
 
 
-    def heyListen(self, r, audio):                  #Wait for the user to use wakewords to wake up the system
+    def heyListen(self, r, m):                  #Wait for the user to use wakewords to wake up the system
         while True:
             if 'mainSpeechRecogThread' in self.threads.keys():
                 self.threads['mainSpeechRecogThread'].start()
@@ -407,10 +407,10 @@ class MainWindow(QWidget):
             img = self.convert_cv_qt(self.facesFrame)      
 
         print(faceNames)
-        self.camera.setPixmap(img)
-        (width, height) = resizeKeepingAspectRatio(self.camera, img, width=400)
-        self.camera.move((SCREEN.width - width)//2, 10)
-        self.camera.setScaledContents(True)
+        #self.camera.setPixmap(img)
+        #(width, height) = resizeKeepingAspectRatio(self.camera, img, width=400)
+        #self.camera.move((SCREEN.width - width)//2, 10)
+        #self.camera.setScaledContents(True)
 
         convertTextToSpeech(f"Ravie de vous revoir, {faceNames[0]} et {faceNames[1]}", LANG)
 
@@ -553,7 +553,7 @@ class CheatWindow(QWidget):
     def __init__(self):
         super().__init__()
 
-        self.setWindowTitle("Terminal Intelligent de Triche Supervisée")
+        self.setWindowTitle("Interface opérateur")
         self.setFixedSize(385, 185)
 
         self.btnForcedText = QPushButton("Force speech recog", self)

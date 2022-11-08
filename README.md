@@ -2,7 +2,7 @@
 
 clean patch of Robotonomie from the Datathon.
 
-works with Python3.
+works with Python3.10 (Download this version if you experience any issue with the pip installs)
 
 You will need to install several packages for python, the script "pip-installs.py" should do the work for you but if the installation of dlib failed :
 
